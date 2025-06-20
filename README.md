@@ -4,7 +4,7 @@
 <!-- DEPLOY-LINK-END -->
 ## 📋 Description
 
-Je démarre l'apprentissage de Symfony 7 et Vue.js en suivant notamment les formations Grafikart pour la partie théorique. Mon objectif est de créer **Medisys**, une application de gestion médicale simple pour l'apprentisssage.
+Je démarre l'apprentissage de Symfony 7 et Vue.js en suivant notamment les formations Grafikart pour la partie théorique. Mon objectif est de créer **Medisys**, une application de gestion médicale simple pour l'apprentissage.
 
 ## 🎯 Objectif
 
