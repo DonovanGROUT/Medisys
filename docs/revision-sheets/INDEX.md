@@ -40,7 +40,7 @@ Fiches à créer au fur et à mesure de l'apprentissage du framework
 
 ## 🏥 Concepts Métier - Santé Digitale
 
-### [Concepts spécialisés](../CONCEPTS-METIER-SANTE.md)
+### [Concepts spécialisés](../MEDICAL-BUSINESS-CONCEPTS.md)
 
 Terminologie et défis techniques du secteur médical (standards HL7, RGPD santé, interopérabilité, etc.)
 
