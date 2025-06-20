@@ -74,7 +74,22 @@ Ce fichier centralise mes notes et découvertes au fil de l'apprentissage.
 
 **Préparation environnement terminée** : Test PHP validé avec succès (classes, chiffrement base64, hashage password_hash, logs JSON, OpenSSL). L'environnement est prêt pour Symfony.
 
-> Prochaine étape : Installation Symfony CLI et création du premier projet
+**Phase 1 - Installation Symfony 7.3 terminée** :
+
+- ✅ Symfony skeleton installé avec webapp components
+- ✅ Structure projet organisée et documentée
+- ✅ Base de données MySQL configurée avec Docker
+- ✅ Connexion Doctrine opérationnelle
+- ✅ Serveur de développement fonctionnel
+
+**Configuration finale** :
+
+- MySQL 8.0 via Docker (port ${DB_PORT})
+- Variables d'environnement sécurisées
+- Base de données `${DB_NAME}` créée
+- Utilisateur dédié configuré
+
+> Prochaine étape : Phase 2 - Fondations Symfony (MVC, entités, contrôleurs)
 
 ## Vue.js
 
@@ -83,6 +98,11 @@ Ce fichier centralise mes notes et découvertes au fil de l'apprentissage.
 ## Problèmes rencontrés
 
 Notes des difficultés et solutions trouvées
+
+**Problème PostgreSQL/PHP 8.2** : Extension pdo_pgsql non disponible pour PHP 8.2 sur Ubuntu 20.04.
+
+- Solution : Migration vers MySQL 8.0
+- Configuration Docker simplifiée et plus stable
 
 ## Astuces découvertes
 

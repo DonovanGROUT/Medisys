@@ -24,6 +24,12 @@ Programmation orientée objet en PHP avec exemples pratiques pour structurer le 
 
 Concepts avancés pour créer des applications robustes : tests unitaires, Query Builder, Repository pattern, consommation d'APIs.
 
+### [03 - Symfony Bases](./03-symfony-bases.md)
+
+#### Installation, Doctrine, Docker, serveur de développement
+
+Installation Symfony 7, configuration base de données MySQL avec Docker, structure projet et premiers pas avec le framework.
+
 ## 🔧 Symfony (À venir)
 
 Fiches à créer au fur et à mesure de l'apprentissage du framework
