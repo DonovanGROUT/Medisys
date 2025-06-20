@@ -114,7 +114,7 @@ symfony server:start
 
 ## 🔮 Prochaine phase
 
-Une fois cette installation terminée, passage à la **Phase 2 : Fondations Symfony** pour découvrir l'approche Symfony du pattern MVC et créer les premières entités métier.
+Une fois cette installation terminée, passage à la **Phase 2 : Entité Patient** pour créer notre première entité métier avec Doctrine ORM, tests et migrations.
 
 ---
 

@@ -26,9 +26,9 @@ Concepts avancés pour créer des applications robustes : tests unitaires, Query
 
 ### [03 - Symfony Bases](./03-symfony-bases.md)
 
-#### Installation, Doctrine, Docker, serveur de développement
+#### Installation, Doctrine, entités, tests, Docker
 
-Installation Symfony 7, configuration base de données MySQL avec Docker, structure projet et premiers pas avec le framework.
+Installation Symfony 7, configuration base de données MySQL avec Docker, création d'entités avec Doctrine, tests PHPUnit et structure projet complète.
 
 ## 🔧 Symfony (À venir)
 
