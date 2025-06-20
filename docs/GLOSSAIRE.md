@@ -52,6 +52,16 @@ Glossaire des termes et concepts découverts pendant l'apprentissage du dévelop
 
 **Validation** : Vérification et nettoyage des données utilisateur avant traitement. Ne jamais faire confiance aux entrées.
 
+**Base64** : Encodage pour représenter des données binaires en format texte. Utilisé pour le transport de données, pas pour la sécurité.
+
+**password_hash()** : Fonction PHP pour hasher sécurisement les mots de passe avec des algorithmes adaptés (bcrypt, Argon2).
+
+**password_verify()** : Fonction PHP pour vérifier qu'un mot de passe correspond à son hash, sans révéler le hash.
+
+**OpenSSL** : Bibliothèque cryptographique pour le chiffrement, génération de clés et certificats. Essentielle pour HTTPS et données sensibles.
+
+**JSON** : JavaScript Object Notation, format d'échange de données structurées, lisible et léger.
+
 **CSRF** : Cross-Site Request Forgery, attaque où un site malveillant fait exécuter des actions à votre insu. Protection par tokens.
 
 **XSS** : Cross-Site Scripting, injection de code JavaScript malveillant. Protection par échappement des données d'affichage.

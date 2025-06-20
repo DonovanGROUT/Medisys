@@ -72,7 +72,9 @@ Ce fichier centralise mes notes et découvertes au fil de l'apprentissage.
 
 ## Découverte Symfony
 
-> Prochaine étape : framework pour accélérer le développement d'applications web robustes
+**Préparation environnement terminée** : Test PHP validé avec succès (classes, chiffrement base64, hashage password_hash, logs JSON, OpenSSL). L'environnement est prêt pour Symfony.
+
+> Prochaine étape : Installation Symfony CLI et création du premier projet
 
 ## Vue.js
 
