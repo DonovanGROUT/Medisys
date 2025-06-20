@@ -29,10 +29,11 @@ Apprendre Symfony 7 et Vue.js en créant un projet concret inspiré du domaine m
 
 ## 🚀 Prochaines étapes
 
-1. Installer Symfony
-2. Comprendre l'approche Symfony du MVC
-3. Découvrir Doctrine ORM
-4. Créer la première entité
+1. ✅ Installer Symfony (Phase 1 terminée)
+2. Créer la première entité Patient avec Doctrine
+3. Développer les contrôleurs et vues pour la gestion des patients
+4. Implémenter l'authentification et la sécurité
+5. Intégrer Vue.js pour l'interface utilisateur
 
 ---
 

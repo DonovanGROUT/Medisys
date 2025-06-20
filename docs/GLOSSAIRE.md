@@ -134,6 +134,26 @@ Glossaire des termes et concepts découverts pendant l'apprentissage du dévelop
 
 **JSON** : JavaScript Object Notation, format d'échange de données léger et lisible.
 
+## 🚀 Symfony Framework
+
+**Symfony** : Framework PHP robuste suivant les bonnes pratiques, avec injection de dépendances et architecture MVC.
+
+**Composer** : Gestionnaire de dépendances PHP. `composer require` pour ajouter des packages, `composer install` pour installer.
+
+**Doctrine ORM** : Système de mapping objet-relationnel pour Symfony. Gère les entités, migrations et requêtes base de données.
+
+**Twig** : Moteur de templates de Symfony pour séparer la logique métier de la présentation.
+
+**Bundle** : Module Symfony qui ajoute des fonctionnalités. Exemple : DoctrineBundle pour l'ORM.
+
+**Environment (.env)** : Fichier de configuration des variables d'environnement (base de données, debug, secrets).
+
+**Database URL** : Chaîne de connexion à la base de données au format `mysql://user:password@host:port/database`.
+
+**Docker Compose** : Outil pour définir et orchestrer des applications multi-conteneurs avec un fichier YAML.
+
+**PDO** : PHP Data Objects, interface PHP pour accéder aux bases de données de manière unifiée.
+
 ---
 
 >Glossaire enrichi au fur et à mesure des découvertes
