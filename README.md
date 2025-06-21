@@ -22,9 +22,9 @@ Apprendre Symfony 7 et Vue.js en créant un projet concret inspiré du domaine m
 - [Glossaire technique](docs/GLOSSARY.md)
 - [Fiches de révision](docs/revision-sheets/INDEX.md)
 - [Concepts métier santé](docs/MEDICAL-BUSINESS-CONCEPTS.md)
-- [Étapes du projet](docs/project/PREPARATION-PROJET.md)
-- [Phase 1 : Installation Symfony](docs/project/PHASE-1-INSTALLATION-SYMFONY.md)
-- [Phase 2 : Entité Patient](docs/project/PHASE-2-ENTITE-PATIENT.md)
+- [Étapes du projet](docs/project/PROJECT-PREPARATION.md)
+- [Phase 1 : Installation Symfony](docs/project/PHASE-1-SYMFONY-INSTALLATION.md)
+- [Phase 2 : Entité Patient](docs/project/PHASE-2-PATIENT-ENTITY.md)
 
 **Note** : La documentation inclut des notions déjà acquises lors de formations antérieures, mais qui restent utiles pour le développement d'applications web avec PHP, Symfony et Vue.js.
 
