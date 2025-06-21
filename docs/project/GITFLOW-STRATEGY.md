@@ -9,10 +9,12 @@
 
 ### Branches de fonctionnalité
 
-- **`feature/`** : Nouvelles fonctionnalités
-  - `feature/patient-entity`
-  - `feature/appointment-management`
-  - `feature/user-authentication`
+- **`feature/`** : Nouvelles fonctionnalités (suivant les phases du projet)
+  - `feature/patient-entity` (Phase 2 - Entité Patient)
+  - `feature/patient-controllers-forms` (Phase 3 - Interface Patient)
+  - `feature/appointment-entity` (Phase 4 - Entité Rendez-vous)
+  - `feature/appointment-controllers` (Phase 5 - Interface Rendez-vous)
+  - `feature/user-authentication` (Phase 6 - Authentification)
 
 ### Branches de support
 
@@ -27,7 +29,7 @@
    ```bash
    git checkout develop
    git pull origin develop
-   git checkout -b feature/patient-entity
+   git checkout -b feature/patient-controllers-forms
    ```
 
 2. **Développer la fonctionnalité**
@@ -88,9 +90,13 @@ docs: update README with installation steps
 
 ## 📋 Prochaines features prévues
 
-- `feature/patient-entity` : Entité Patient avec Doctrine
+- `feature/patient-entity` : ✅ **TERMINÉE** - Entité Patient avec Doctrine
+- `feature/patient-controllers-forms` : 🔄 **PROCHAINE** - Contrôleurs et formulaires Patient
+- `feature/appointment-entity` : 📅 **FUTURE** - Entité Rendez-vous
+- `feature/appointment-controllers` : 📅 **FUTURE** - Interface Rendez-vous
+- `feature/user-authentication` : 📅 **FUTURE** - Système d'authentification
 
->Les autres features seront ajoutées au fur et à mesure du développements
+> Les features suivent la progression des phases documentées
 
 ## ✅ Avantages de cette approche
 

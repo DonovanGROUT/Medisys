@@ -82,14 +82,29 @@ Ce fichier centralise mes notes et découvertes au fil de l'apprentissage.
 - ✅ Connexion Doctrine opérationnelle
 - ✅ Serveur de développement fonctionnel
 
+**Phase 2 - Entité Patient terminée** :
+
+- ✅ Entité Patient complète avec propriétés médicales
+- ✅ Propriétés privées pour sécurité RGPD
+- ✅ Repository PatientRepository configuré
+- ✅ Migration base de données générée et appliquée
+- ✅ Tests unitaires (8 tests, 11 assertions)
+- ✅ Tests d'intégration (3 tests, 8 assertions)
+- ✅ Audit trail automatique (createdAt/updatedAt)
+- ✅ Chaînage fluide des setters (pattern fluent)
+- ✅ Validation email unique en base
+- ✅ Calcul automatique de l'âge
+- ✅ PHPDoc complet sur tous les fichiers
+
 **Configuration finale** :
 
 - MySQL 8.0 via Docker (port ${DB_PORT})
 - Variables d'environnement sécurisées
 - Base de données `${DB_NAME}` créée
+- Base de test `${DB_NAME}_test` dédiée
 - Utilisateur dédié configuré
 
-> Prochaine étape : Phase 2 - Fondations Symfony (MVC, entités, contrôleurs)
+> Prochaine étape : Phase 3 - Contrôleurs et formulaires
 
 ## Vue.js
 
@@ -121,6 +136,29 @@ Notes des difficultés et solutions trouvées
 **Typage des paramètres** : Déclarer les types des paramètres de fonctions améliore la robustesse.
 
 **Autoload** : Composer résout automatiquement les dépendances, plus besoin de require partout.
+
+**Doctrine ORM** :
+
+- Entités avec annotations/attributs PHP 8
+- Propriétés privées + getters/setters pour l'encapsulation
+- Migrations automatiques pour évolutions de schéma
+- Repository pattern pour l'accès aux données
+- Tests d'intégration avec base de test dédiée
+
+**PHPUnit Testing** :
+
+- Tests unitaires sans dépendances externes
+- Tests d'intégration avec vraie base de données
+- setUp/tearDown pour isolation des tests
+- Assertions spécifiques (assertSame vs assertEquals)
+- Nettoyage de base entre tests pour éviter conflits
+
+**Sécurité base de données** :
+
+- Permissions MySQL graduelles selon environnement
+- Utilisateurs dédiés par contexte (dev/test/prod)
+- Variables d'environnement pour credentials
+- Audit trail automatique avec createdAt/updatedAt
 
 ---
 

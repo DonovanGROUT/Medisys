@@ -71,6 +71,86 @@ php -S localhost:8000 -t public
 symfony server:start
 ```
 
+## 🏥 Entités et base de données
+
+### Création d'entité
+
+```bash
+# Générer une entité
+php bin/console make:entity NomEntite
+
+# Générer une migration
+php bin/console make:migration
+
+# Appliquer les migrations
+php bin/console doctrine:migrations:migrate
+```
+
+### Exemple entité Patient
+
+```php
+#[ORM\Entity(repositoryClass: PatientRepository::class)]
+class Patient
+{
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
+
+    #[ORM\Column(length: 100)]
+    private ?string $firstName = null;
+
+    // Getters/setters avec chaînage fluide
+    public function setFirstName(string $firstName): static
+    {
+        $this->firstName = $firstName;
+        return $this; // Permet le chaînage
+    }
+}
+```
+
+### Patterns importants
+
+- **Repository Pattern** : Séparation logique métier / accès données
+- **Fluent Interface** : Chaînage des setters pour syntaxe élégante
+- **Audit Trail** : `createdAt`/`updatedAt` automatiques pour traçabilité
+
+## 🧪 Tests avec PHPUnit
+
+### Configuration tests
+
+```bash
+# Installer PHPUnit (inclus avec webapp)
+composer require --dev phpunit/phpunit
+
+# Lancer les tests
+php bin/phpunit
+```
+
+### Types de tests
+
+**Tests unitaires** : Logique métier sans dépendances
+
+```bash
+tests/Unit/Entity/PatientTest.php
+```
+
+**Tests d'intégration** : Avec vraie base de données
+
+```bash
+tests/Integration/Repository/PatientRepositoryTest.php
+```
+
+### Base de données de test
+
+```bash
+# Configuration .env.test
+DATABASE_URL="mysql://user:pass@127.0.0.1:${DB_PORT}/app_test"
+
+# Appliquer migrations en test
+php bin/console doctrine:migrations:migrate --env=test
+```
+
 ## 📝 Points clés à retenir
 
 - **Convention over Configuration** : Symfony privilégie les conventions pour réduire la configuration
