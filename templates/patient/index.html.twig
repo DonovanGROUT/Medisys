@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des patients - {{ parent() }}{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="mb-4">Liste des patients</h1>
+
+            {% if patients|length > 0 %}
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nom</th>
+                                <th>Prénom</th>
+                                <th>Date de naissance</th>
+                                <th>Sexe</th>
+                                <th>Téléphone</th>
+                                <th>Email</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for patient in patients %}
+                                <tr>
+                                    <td>{{ patient.id }}</td>
+                                    <td>{{ patient.lastName }}</td>
+                                    <td>{{ patient.firstName }}</td>
+                                    <td>{{ patient.dateOfBirth ? patient.dateOfBirth|date('d/m/Y') : '' }}</td>
+                                    <td>{{ patient.gender ?? '' }}</td>
+                                    <td>{{ patient.phoneNumber ?? '' }}</td>
+                                    <td>{{ patient.email ?? '' }}</td>
+                                    <td>
+                                        <!-- Actions vides pour le moment -->
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-3">
+                    <p>{{ patients|length }} patient(s) enregistré(s)</p>
+                </div>
+            {% else %}
+                <div class="alert alert-info" role="alert">
+                    Aucun patient enregistré.
+                </div>
+            {% endif %}
+
+            <div class="mt-4">
+                <a href="#" class="btn btn-outline-success">Ajouter un patient</a>
+                <a href="/" class="btn btn-outline-secondary ms-2">Retour à l'accueil</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
