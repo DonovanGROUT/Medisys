@@ -104,7 +104,19 @@ Ce fichier centralise mes notes et découvertes au fil de l'apprentissage.
 - Base de test `${DB_NAME}_test` dédiée
 - Utilisateur dédié configuré
 
-> Prochaine étape : Phase 3 - Contrôleurs et formulaires
+**Phase 3 - Contrôleurs et formulaires (en cours)** :
+
+- Génération de contrôleurs avec `php bin/console make:controller`
+- Définition des routes avec les attributs PHP 8 (`#[Route(...)]`)
+- Passage de variables du contrôleur à la vue via `$this->render('...', ['patients' => ...])`
+- Utilisation de Twig pour afficher des listes, des conditions, des boucles
+- Utilisation des repositories pour accéder aux entités Doctrine
+- Génération et application de migrations pour la base de données
+- Mise en place de tests unitaires et d'intégration avec base de test dédiée
+- Utilisation de PHPDoc pour documenter entités, repositories, contrôleurs et tests
+- Gestion de la sécurité et de la conformité (audit trail, validation, RGPD)
+
+> Prochaine étape : Continuer la phase 3.
 
 ## Vue.js
 

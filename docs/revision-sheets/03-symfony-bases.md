@@ -167,4 +167,37 @@ php bin/console doctrine:migrations:migrate --env=test
 
 ---
 
+## Contrôleurs et routes
+
+- Générer un contrôleur avec `php bin/console make:controller`.
+- Définir une route avec l’attribut PHP 8 : `#[Route('/patients', name: 'app_patient_index')]`.
+- Méthode d’action = méthode publique du contrôleur appelée par la route.
+
+## Twig et vues
+
+- Utiliser Twig pour afficher des listes, des conditions, des boucles.
+- Passer des variables du contrôleur à la vue avec `$this->render('vue.html.twig', ['var' => $valeur])`.
+
+## Repository et accès aux données
+
+- Utiliser un repository pour accéder aux entités (ex : PatientRepository).
+- Appeler `findAll()`, `find($id)`, etc.
+
+## Migrations
+
+- Générer une migration avec `php bin/console make:migration`.
+- Appliquer avec `php bin/console doctrine:migrations:migrate`.
+
+## Tests
+
+- Test unitaire : logique métier isolée (PatientTest.php).
+- Test d’intégration : persistance réelle (PatientRepositoryTest.php).
+- Utilisation d’une base de test dédiée.
+
+## PHPDoc
+
+- Ajouter des docblocks sur les classes et méthodes importantes (contrôleurs, entités, tests).
+
+---
+
 > Formation Grafikart Symfony 7 - Phase 1 Installation
