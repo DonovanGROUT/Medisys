@@ -1,0 +1,81 @@
+{#
+    Template Twig : Liste des patients
+    ----------------------------------
+    Affiche la liste paginée des patients avec actions (voir, ajouter).
+    Utilisé par PatientController::index().
+    Variables disponibles :
+        - patients : tableau d'instances de App\Entity\Patient
+#}
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des patients - {{ parent() }}{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="mb-4">Liste des patients</h1>
+
+            {% for label, messages in app.flashes %}
+                {% set label = label|lower|trim %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ label }}">{{ message }}</div>
+                {% endfor %}
+            {% endfor %}
+
+            {% if patients|length > 0 %}
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nom</th>
+                                <th>Prénom</th>
+                                <th>Date de naissance</th>
+                                <th>Sexe</th>
+                                <th>Téléphone</th>
+                                <th>Email</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for patient in patients %}
+                                <tr>
+                                    <td>{{ patient.id }}</td>
+                                    <td>{{ patient.lastName }}</td>
+                                    <td>{{ patient.firstName }}</td>
+                                    <td>{{ patient.birthDate ? patient.birthDate|date('d/m/Y') : '' }}</td>
+                                    <td>{{ patient.gender ?? '' }}</td>
+                                    <td>{{ patient.phone ?? '' }}</td>
+                                    <td>{{ patient.email ?? '' }}</td>
+                                    <td>
+                                        <a href="{{ path('app_patient_show', {'id': patient.id}) }}" class="btn btn-sm btn-primary">Voir</a>
+                                        <a href="{{ path('app_patient_edit', {'id': patient.id}) }}" class="btn btn-sm btn-warning ms-1">Modifier</a>
+                                        {# Formulaire de suppression sécurisé (POST + CSRF) #}
+                                        <form method="post" action="{{ path('app_patient_delete', {'id': patient.id}) }}" style="display:inline-block" onsubmit="return confirm('Confirmer la suppression de ce patient ?');">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('delete_patient_' ~ patient.id) }}">
+                                            <button class="btn btn-sm btn-danger ms-1">Supprimer</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-3">
+                    <p>{{ patients|length }} patient(s) enregistré(s)</p>
+                </div>
+            {% else %}
+                <div class="alert alert-info" role="alert">
+                    Aucun patient enregistré.
+                </div>
+            {% endif %}
+
+            <div class="mt-4">
+                <a href="{{ path('app_patient_new') }}" class="btn btn-outline-success">Ajouter un patient</a>
+                <a href="/" class="btn btn-outline-secondary ms-2">Retour à l'accueil</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

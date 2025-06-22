@@ -26,9 +26,9 @@ Concepts avancés pour créer des applications robustes : tests unitaires, Query
 
 ### [03 - Symfony Bases](./03-symfony-bases.md)
 
-#### Installation, Doctrine, Docker, serveur de développement
+#### Installation, Doctrine, entités, tests, Docker
 
-Installation Symfony 7, configuration base de données MySQL avec Docker, structure projet et premiers pas avec le framework.
+Installation Symfony 7, configuration base de données MySQL avec Docker, création d'entités avec Doctrine, tests PHPUnit et structure projet complète.
 
 ## 🔧 Symfony (À venir)
 
@@ -40,7 +40,7 @@ Fiches à créer au fur et à mesure de l'apprentissage du framework
 
 ## 🏥 Concepts Métier - Santé Digitale
 
-### [Concepts spécialisés](../CONCEPTS-METIER-SANTE.md)
+### [Concepts spécialisés](../MEDICAL-BUSINESS-CONCEPTS.md)
 
 Terminologie et défis techniques du secteur médical (standards HL7, RGPD santé, interopérabilité, etc.)
 

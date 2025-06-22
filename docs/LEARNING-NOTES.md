@@ -82,14 +82,49 @@ Ce fichier centralise mes notes et découvertes au fil de l'apprentissage.
 - ✅ Connexion Doctrine opérationnelle
 - ✅ Serveur de développement fonctionnel
 
+**Phase 2 - Entité Patient terminée** :
+
+- ✅ Entité Patient complète avec propriétés médicales
+- ✅ Propriétés privées pour sécurité RGPD
+- ✅ Repository PatientRepository configuré
+- ✅ Migration base de données générée et appliquée
+- ✅ Tests unitaires (8 tests, 11 assertions)
+- ✅ Tests d'intégration (3 tests, 8 assertions)
+- ✅ Audit trail automatique (createdAt/updatedAt)
+- ✅ Chaînage fluide des setters (pattern fluent)
+- ✅ Validation email unique en base
+- ✅ Calcul automatique de l'âge
+- ✅ PHPDoc complet sur tous les fichiers
+
 **Configuration finale** :
 
 - MySQL 8.0 via Docker (port ${DB_PORT})
 - Variables d'environnement sécurisées
 - Base de données `${DB_NAME}` créée
+- Base de test `${DB_NAME}_test` dédiée
 - Utilisateur dédié configuré
 
-> Prochaine étape : Phase 2 - Fondations Symfony (MVC, entités, contrôleurs)
+**Phase 3 - Contrôleurs et formulaires (en cours)** :
+
+- Génération de contrôleurs avec `php bin/console make:controller`
+- Définition des routes avec les attributs PHP 8 (`#[Route(...)]`)
+- Passage de variables du contrôleur à la vue via `$this->render('...', ['patients' => ...])`
+- Utilisation de Twig pour afficher des listes, des conditions, des boucles
+- Utilisation des repositories pour accéder aux entités Doctrine
+- Génération et application de migrations pour la base de données
+- Mise en place de tests unitaires et d'intégration avec base de test dédiée
+- Utilisation de PHPDoc pour documenter entités, repositories, contrôleurs et tests
+- Gestion de la sécurité et de la conformité (audit trail, validation, RGPD)
+
+> Prochaine étape : Continuer la phase 3.
+
+## Symfony - Approche CRUD et tests fonctionnels
+
+- **CRUD Symfony** : Chaque action (show, new, edit, delete) correspond à une méthode du contrôleur, un template Twig dédié et un test fonctionnel associé.
+- **Séparation back/front** : Les templates Twig servent le HTML côté serveur, la future refonte Vue.js utilisera une API dédiée.
+- **Tests fonctionnels** : Utilisation de WebTestCase pour simuler des requêtes HTTP et vérifier le rendu (voir PatientControllerTest).
+- **PHPDoc** : Documentation systématique des classes et méthodes critiques (contrôleurs, entités, tests) pour la maintenabilité.
+- **Documentation des templates** : Bloc de commentaire en tête de chaque .html.twig pour décrire l’usage et les variables attendues.
 
 ## Vue.js
 
@@ -122,6 +157,41 @@ Notes des difficultés et solutions trouvées
 
 **Autoload** : Composer résout automatiquement les dépendances, plus besoin de require partout.
 
+**Doctrine ORM** :
+
+- Entités avec annotations/attributs PHP 8
+- Propriétés privées + getters/setters pour l'encapsulation
+- Migrations automatiques pour évolutions de schéma
+- Repository pattern pour l'accès aux données
+- Tests d'intégration avec base de test dédiée
+
+**PHPUnit Testing** :
+
+- Tests unitaires sans dépendances externes
+- Tests d'intégration avec vraie base de données
+- setUp/tearDown pour isolation des tests
+- Assertions spécifiques (assertSame vs assertEquals)
+- Nettoyage de base entre tests pour éviter conflits
+
+**Sécurité base de données** :
+
+- Permissions MySQL graduelles selon environnement
+- Utilisateurs dédiés par contexte (dev/test/prod)
+- Variables d'environnement pour credentials
+- Audit trail automatique avec createdAt/updatedAt
+
 ---
 
-### Notes mises à jour au fur et à mesure de l'apprentissage
+## Notes sur l'action edit (édition patient)
+
+- Utiliser le même FormType pour new/edit simplifie la maintenance.
+- Pour les tests fonctionnels, cibler la ligne du patient édité via un email unique et une boucle sur les lignes du tableau (éviter les callbacks dépréciés).
+- Les dépréciations PHPUnit n'empêchent pas les tests de passer mais doivent être surveillées pour la pérennité du projet.
+
+## CSRF et robustesse des tests fonctionnels (Delete)
+
+- Pour toute action de suppression, toujours utiliser un formulaire POST avec token CSRF.
+- Tester la suppression en simulant le parcours utilisateur réel (extraction du token CSRF depuis le DOM, vérification de la suppression effective, des messages flash et de la redirection).
+- Exemple de test robuste : voir `PatientControllerDeleteTest.php`.
+
+> Notes mises à jour au fur et à mesure de l'apprentissage

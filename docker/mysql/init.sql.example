@@ -1,0 +1,18 @@
+-- Script d'initialisation MySQL pour Medisys
+-- Exécuté automatiquement au premier démarrage du conteneur
+-- Template à copier vers init.sql et personnaliser
+
+-- Créer les bases nécessaires
+CREATE DATABASE IF NOT EXISTS your_database_name;
+CREATE DATABASE IF NOT EXISTS your_database_name_test;
+
+-- Permissions (remplacer your_mysql_user par votre utilisateur)
+GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER ON your_database_name.* TO 'your_mysql_user'@'%';
+GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER ON your_database_name_test.* TO 'your_mysql_user'@'%';
+GRANT CREATE ON *.* TO 'your_mysql_user'@'%';
+
+-- Appliquer les changements
+FLUSH PRIVILEGES;
+
+-- Log pour vérifier que le script s'est exécuté
+SELECT 'Medisys MySQL initialization completed' as status;

@@ -36,7 +36,7 @@ Glossaire des termes et concepts découverts pendant l'apprentissage du dévelop
 
 **Requête préparée** : Technique pour séparer la structure SQL des données, prévient les injections SQL.
 
-**CRUD** : Create, Read, Update, Delete - les quatre opérations de base sur les données.
+**CRUD** : Create, Read, Update, Delete - les quatre opérations de base sur les données. Utilisé dans Symfony pour désigner les actions principales sur une entité (ex : Patient) : création, affichage, modification, suppression (cette dernière étant toujours protégée par un token CSRF pour éviter toute suppression non autorisée).
 
 **Connexion BDD** : Établissement de la liaison entre l'application PHP et la base de données via DSN (Data Source Name).
 
@@ -154,6 +154,42 @@ Glossaire des termes et concepts découverts pendant l'apprentissage du dévelop
 
 **PDO** : PHP Data Objects, interface PHP pour accéder aux bases de données de manière unifiée.
 
+## 🏥 Développement médical
+
+**Patient Entity** : Entité Doctrine représentant un patient avec données personnelles et médicales sécurisées.
+
+**Audit Trail** : Traçabilité des modifications avec timestamps automatiques (createdAt, updatedAt) pour conformité médicale.
+
+**RGPD** : Règlement sur la protection des données. Exige sécurisation et contrôle d'accès aux données personnelles.
+
+**Repository Pattern** : Couche d'abstraction pour l'accès aux données, sépare la logique métier de la persistance.
+
+**Migration** : Script de modification de schéma de base de données, versionnée et reproductible.
+
+**Entity Manager** : Service Doctrine qui gère le cycle de vie des entités (persist, flush, find).
+
+**Fluent Interface** : Pattern où les méthodes retournent $this pour permettre le chaînage : `$patient->setName()->setEmail()`.
+
+**Property Mapping** : Liaison entre propriétés PHP et colonnes de base de données via annotations ORM.
+
+**Constraint Validation** : Validation automatique des données (unique, not null, length) au niveau base et application.
+
+**Test Isolation** : Nettoyage de la base entre tests pour éviter les interdépendances et garantir la reproductibilité.
+
+**FormType** : Classe PHP (ex : PatientType) qui définit la structure d’un formulaire Symfony pour une entité. Permet de générer automatiquement les champs du formulaire et de lier les données à l’entité.
+
 ---
+
+### Edit (édition)
+
+Action du CRUD permettant de modifier une entité existante (ex : patient). Implique un formulaire pré-rempli, une validation et une sauvegarde en base.
+
+### FormType
+
+Classe Symfony qui définit la structure d'un formulaire (champs, validation, options). Utilisée pour la création et l'édition d'entités.
+
+### Test fonctionnel
+
+Test automatisé qui simule une requête HTTP et vérifie le comportement d'une page ou d'une action complète (ex : création, édition, affichage d'un patient).
 
 >Glossaire enrichi au fur et à mesure des découvertes
