@@ -219,11 +219,16 @@ php bin/console doctrine:migrations:migrate --env=test
 1. Action show (fiche patient)
    - Méthode show() dans PatientController
    - Template show.html.twig
-   - Test fonctionnel PatientControllerTest::testShowPatient
+   - Test fonctionnel PatientControllerShowTest::testShowPatient
 2. Action new (création)
    - Méthode new() dans PatientController
    - Template new.html.twig
-   - Test fonctionnel associé
+   - Test fonctionnel PatientControllerNewTest
+3. Action edit (édition)
+   - Méthode edit() dans PatientController
+   - Template edit.html.twig
+   - Test fonctionnel PatientControllerEditTest
+   - Utilise le même FormType que pour la création
 
 ---
 

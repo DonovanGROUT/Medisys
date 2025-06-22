@@ -180,4 +180,16 @@ Glossaire des termes et concepts découverts pendant l'apprentissage du dévelop
 
 ---
 
+### Edit (édition)
+
+Action du CRUD permettant de modifier une entité existante (ex : patient). Implique un formulaire pré-rempli, une validation et une sauvegarde en base.
+
+### FormType
+
+Classe Symfony qui définit la structure d'un formulaire (champs, validation, options). Utilisée pour la création et l'édition d'entités.
+
+### Test fonctionnel
+
+Test automatisé qui simule une requête HTTP et vérifie le comportement d'une page ou d'une action complète (ex : création, édition, affichage d'un patient).
+
 >Glossaire enrichi au fur et à mesure des découvertes

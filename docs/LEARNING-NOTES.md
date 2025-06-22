@@ -182,4 +182,10 @@ Notes des difficultés et solutions trouvées
 
 ---
 
-### Notes mises à jour au fur et à mesure de l'apprentissage
+## Notes sur l'action edit (édition patient)
+
+- Utiliser le même FormType pour new/edit simplifie la maintenance.
+- Pour les tests fonctionnels, cibler la ligne du patient édité via un email unique et une boucle sur les lignes du tableau (éviter les callbacks dépréciés).
+- Les dépréciations PHPUnit n'empêchent pas les tests de passer mais doivent être surveillées pour la pérennité du projet.
+
+> Notes mises à jour au fur et à mesure de l'apprentissage
