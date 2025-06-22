@@ -36,7 +36,7 @@ Glossaire des termes et concepts découverts pendant l'apprentissage du dévelop
 
 **Requête préparée** : Technique pour séparer la structure SQL des données, prévient les injections SQL.
 
-**CRUD** : Create, Read, Update, Delete - les quatre opérations de base sur les données. Utilisé dans Symfony pour désigner les actions principales sur une entité (ex : Patient) : création, affichage, modification, suppression.
+**CRUD** : Create, Read, Update, Delete - les quatre opérations de base sur les données. Utilisé dans Symfony pour désigner les actions principales sur une entité (ex : Patient) : création, affichage, modification, suppression (cette dernière étant toujours protégée par un token CSRF pour éviter toute suppression non autorisée).
 
 **Connexion BDD** : Établissement de la liaison entre l'application PHP et la base de données via DSN (Data Source Name).
 

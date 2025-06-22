@@ -232,4 +232,29 @@ php bin/console doctrine:migrations:migrate --env=test
 
 ---
 
+## 🔒 Suppression sécurisée (Delete + CSRF)
+
+- Toujours utiliser un formulaire POST avec un token CSRF pour la suppression d'entité (ex : Patient).
+- Jamais de suppression en GET (risque de faille !).
+- Exemple :
+
+```twig
+<form method="post" action="{{ path('app_patient_delete', {'id': patient.id}) }}">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete_patient_' ~ patient.id) }}">
+    <button>Supprimer</button>
+</form>
+```
+
+- Contrôleur :
+
+```php
+if ($this->isCsrfTokenValid('delete_patient_' . $patient->getId(), $request->request->get('_token'))) {
+    // ... suppression ...
+}
+```
+
+- Tester la suppression avec un test fonctionnel qui vérifie la sécurité et la robustesse.
+
+---
+
 > Formation Grafikart Symfony 7 - Phase 1 Installation

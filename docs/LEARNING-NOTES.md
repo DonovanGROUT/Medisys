@@ -188,4 +188,10 @@ Notes des difficultés et solutions trouvées
 - Pour les tests fonctionnels, cibler la ligne du patient édité via un email unique et une boucle sur les lignes du tableau (éviter les callbacks dépréciés).
 - Les dépréciations PHPUnit n'empêchent pas les tests de passer mais doivent être surveillées pour la pérennité du projet.
 
+## CSRF et robustesse des tests fonctionnels (Delete)
+
+- Pour toute action de suppression, toujours utiliser un formulaire POST avec token CSRF.
+- Tester la suppression en simulant le parcours utilisateur réel (extraction du token CSRF depuis le DOM, vérification de la suppression effective, des messages flash et de la redirection).
+- Exemple de test robuste : voir `PatientControllerDeleteTest.php`.
+
 > Notes mises à jour au fur et à mesure de l'apprentissage

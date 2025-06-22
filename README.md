@@ -44,22 +44,23 @@ Apprendre Symfony 7 et Vue.js en créant un projet concret inspiré du domaine m
 - Tests unitaires et d'intégration fonctionnels
 - Documentation PHPDoc complète
 
-### 🔄 Phase 3 - Contrôleurs et Formulaires (En cours)
+### ✅ Phase 3 - Contrôleurs et Formulaires (Terminée)
 
-- Contrôleur PatientController (CRUD)
+- Contrôleur PatientController (CRUD complet)
 - Formulaires de création/édition
 - Templates Twig
-- CRUD complet pour Patient (show, new, edit)
-- Tests fonctionnels (show, new, edit)
+- CRUD complet pour Patient (show, new, edit, delete)
+- Tests fonctionnels (show, new, edit, delete)
 
 ## 🧪 Tests et Qualité
 
 - **Tests unitaires** : 1 fichier, 8 tests, 11 assertions ✅
-- **Tests fonctionnels (contrôleur)** : 3 fichiers, 3 tests (show, new, edit) ✅
+- **Tests fonctionnels (contrôleur)** : 4 fichiers, 4 tests (show, new, edit, delete) ✅
 - **Tests d'intégration (repository)** : 1 fichier, 3 tests (save/retrieve, email uniqueness, audit trail) ✅
-- **Total assertions** : 50 ✅
+- **Total assertions** : 58 ✅
 - **Couverture PHPDoc** : 100% ✅
 - **Architecture** : Repository Pattern + Entity/Migration ✅
+- **Sécurité** : Suppression protégée par CSRF, aucun accès direct en GET, tests robustes sur la suppression
 
 ---
 
