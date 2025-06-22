@@ -46,10 +46,11 @@ Apprendre Symfony 7 et Vue.js en créant un projet concret inspiré du domaine m
 
 ### 🔄 Phase 3 - Contrôleurs et Formulaires (Prochaine étape)
 
-- Contrôleur PatientController
+- Contrôleur PatientController (CRUD)
 - Formulaires de création/édition
 - Templates Twig
 - CRUD complet pour Patient
+- Tests fonctionnels
 
 ## 🧪 Tests et Qualité
 
