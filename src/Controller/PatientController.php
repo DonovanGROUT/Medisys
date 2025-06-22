@@ -34,6 +34,7 @@ final class PatientController extends AbstractController
     #[Route('/patients', name: 'app_patient_index', methods: ['GET'])]
     public function index(PatientRepository $patientRepository): Response
     {
+        // Récupère tous les patients depuis la base de données
         return $this->render('patient/index.html.twig', [
             'patients' => $patientRepository->findAll(),
         ]);
@@ -48,6 +49,7 @@ final class PatientController extends AbstractController
     #[Route('/patients/{id}', name: 'app_patient_show', requirements: ['id' => '\\d+'], methods: ['GET'])]
     public function show(Patient $patient): Response
     {
+        // Affiche la fiche détaillée du patient passé en paramètre
         return $this->render('patient/show.html.twig', [
             'patient' => $patient,
         ]);
@@ -66,17 +68,21 @@ final class PatientController extends AbstractController
     public function new(Request $request, EntityManagerInterface $em): Response
     {
         $patient = new Patient();
+        // Crée le formulaire de création de patient
         $form = $this->createForm(PatientType::class, $patient);
         $form->handleRequest($request);
 
+        // Si le formulaire est soumis et valide, on sauvegarde le patient
         if ($form->isSubmitted() && $form->isValid()) {
             $em->persist($patient);
             $em->flush();
             $em->clear(); // Force Doctrine à rafraîchir le cache des entités
             $this->addFlash('success', 'Patient created successfully.');
+            // Redirige vers la liste des patients
             return $this->redirectToRoute('app_patient_index');
         }
 
+        // Affiche le formulaire de création
         return $this->render('patient/new.html.twig', [
             'form' => $form->createView(),
         ]);

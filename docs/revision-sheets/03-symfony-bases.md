@@ -173,6 +173,12 @@ php bin/console doctrine:migrations:migrate --env=test
 - Définir une route avec l’attribut PHP 8 : `#[Route('/patients', name: 'app_patient_index')]`.
 - Méthode d’action = méthode publique du contrôleur appelée par la route.
 
+## Déclaration des routes
+
+- **Attributs PHP (recommandé)** : Les routes sont généralement déclarées directement au-dessus des méthodes du contrôleur avec `#[Route(...)]`.
+- **Fichier séparé (YAML)** : Il est aussi possible de déclarer toutes les routes dans un fichier dédié (`config/routes.yaml`), ce qui peut être utile pour les projets très structurés ou pour centraliser la configuration. À privilégier si besoin de séparation stricte ou d'import massif de routes.
+- **Bonnes pratiques** : Pour la plupart des projets Symfony modernes, la déclaration par attributs dans les contrôleurs est suffisante et plus lisible.
+
 ## Twig et vues
 
 - Utiliser Twig pour afficher des listes, des conditions, des boucles.
@@ -200,9 +206,10 @@ php bin/console doctrine:migrations:migrate --env=test
 
 ---
 
-## Contrôleurs, vues et tests fonctionnels (CRUD)
+## Contrôleurs, vues, formulaires et tests fonctionnels (CRUD)
 
 - **Contrôleur** : Classe PHP qui gère les routes et actions (ex : PatientController)
+- **FormType** : Classe PHP dédiée (ex : PatientType) qui définit les champs du formulaire pour une entité. Utilisée pour la création/édition d'entités via `$this->createForm(PatientType::class, $patient)` dans le contrôleur.
 - **Template Twig** : Vue HTML générée côté serveur, reçoit les variables du contrôleur
 - **Test fonctionnel** : Vérifie le rendu d’une page ou d’une action via WebTestCase
 - **Documentation** : PHPDoc sur les classes/méthodes, bloc de commentaire en tête des templates Twig

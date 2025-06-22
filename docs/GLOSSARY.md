@@ -176,6 +176,8 @@ Glossaire des termes et concepts découverts pendant l'apprentissage du dévelop
 
 **Test Isolation** : Nettoyage de la base entre tests pour éviter les interdépendances et garantir la reproductibilité.
 
+**FormType** : Classe PHP (ex : PatientType) qui définit la structure d’un formulaire Symfony pour une entité. Permet de générer automatiquement les champs du formulaire et de lier les données à l’entité.
+
 ---
 
 >Glossaire enrichi au fur et à mesure des découvertes
