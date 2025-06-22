@@ -16,6 +16,13 @@
         <div class="col-md-12">
             <h1 class="mb-4">Liste des patients</h1>
 
+            {% for label, messages in app.flashes %}
+                {% set label = label|lower|trim %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ label }}">{{ message }}</div>
+                {% endfor %}
+            {% endfor %}
+
             {% if patients|length > 0 %}
                 <div class="table-responsive">
                     <table class="table table-bordered">
@@ -37,9 +44,9 @@
                                     <td>{{ patient.id }}</td>
                                     <td>{{ patient.lastName }}</td>
                                     <td>{{ patient.firstName }}</td>
-                                    <td>{{ patient.dateOfBirth ? patient.dateOfBirth|date('d/m/Y') : '' }}</td>
+                                    <td>{{ patient.birthDate ? patient.birthDate|date('d/m/Y') : '' }}</td>
                                     <td>{{ patient.gender ?? '' }}</td>
-                                    <td>{{ patient.phoneNumber ?? '' }}</td>
+                                    <td>{{ patient.phone ?? '' }}</td>
                                     <td>{{ patient.email ?? '' }}</td>
                                     <td>
                                         <a href="{{ path('app_patient_show', {'id': patient.id}) }}" class="btn btn-sm btn-primary">Voir</a>
@@ -59,7 +66,7 @@
             {% endif %}
 
             <div class="mt-4">
-                <a href="#" class="btn btn-outline-success">Ajouter un patient</a>
+                <a href="{{ path('app_patient_new') }}" class="btn btn-outline-success">Ajouter un patient</a>
                 <a href="/" class="btn btn-outline-secondary ms-2">Retour à l'accueil</a>
             </div>
         </div>
