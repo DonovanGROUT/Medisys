@@ -118,6 +118,14 @@ Ce fichier centralise mes notes et découvertes au fil de l'apprentissage.
 
 > Prochaine étape : Continuer la phase 3.
 
+## Symfony - Approche CRUD et tests fonctionnels
+
+- **CRUD Symfony** : Chaque action (show, new, edit, delete) correspond à une méthode du contrôleur, un template Twig dédié et un test fonctionnel associé.
+- **Séparation back/front** : Les templates Twig servent le HTML côté serveur, la future refonte Vue.js utilisera une API dédiée.
+- **Tests fonctionnels** : Utilisation de WebTestCase pour simuler des requêtes HTTP et vérifier le rendu (voir PatientControllerTest).
+- **PHPDoc** : Documentation systématique des classes et méthodes critiques (contrôleurs, entités, tests) pour la maintenabilité.
+- **Documentation des templates** : Bloc de commentaire en tête de chaque .html.twig pour décrire l’usage et les variables attendues.
+
 ## Vue.js
 
 > À prévoir : interface utilisateur moderne et interactive

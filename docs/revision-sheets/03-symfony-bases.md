@@ -200,4 +200,24 @@ php bin/console doctrine:migrations:migrate --env=test
 
 ---
 
+## Contrôleurs, vues et tests fonctionnels (CRUD)
+
+- **Contrôleur** : Classe PHP qui gère les routes et actions (ex : PatientController)
+- **Template Twig** : Vue HTML générée côté serveur, reçoit les variables du contrôleur
+- **Test fonctionnel** : Vérifie le rendu d’une page ou d’une action via WebTestCase
+- **Documentation** : PHPDoc sur les classes/méthodes, bloc de commentaire en tête des templates Twig
+
+### Exemple de cycle CRUD (Patient)
+
+1. Action show (fiche patient)
+   - Méthode show() dans PatientController
+   - Template show.html.twig
+   - Test fonctionnel PatientControllerTest::testShowPatient
+2. Action new (création)
+   - Méthode new() dans PatientController
+   - Template new.html.twig
+   - Test fonctionnel associé
+
+---
+
 > Formation Grafikart Symfony 7 - Phase 1 Installation
