@@ -1,3 +1,11 @@
+{#
+    Template Twig : Liste des patients
+    ----------------------------------
+    Affiche la liste paginée des patients avec actions (voir, ajouter).
+    Utilisé par PatientController::index().
+    Variables disponibles :
+        - patients : tableau d'instances de App\Entity\Patient
+#}
 {% extends 'base.html.twig' %}
 
 {% block title %}Liste des patients - {{ parent() }}{% endblock %}
@@ -34,7 +42,7 @@
                                     <td>{{ patient.phoneNumber ?? '' }}</td>
                                     <td>{{ patient.email ?? '' }}</td>
                                     <td>
-                                        <!-- Actions vides pour le moment -->
+                                        <a href="{{ path('app_patient_show', {'id': patient.id}) }}" class="btn btn-sm btn-primary">Voir</a>
                                     </td>
                                 </tr>
                             {% endfor %}

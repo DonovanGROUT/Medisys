@@ -30,4 +30,18 @@ final class PatientController extends AbstractController
             'patients' => $patientRepository->findAll(),
         ]);
     }
+
+    /**
+     * Affiche la fiche d'un patient (route /patients/{id}).
+     *
+     * @param Patient $patient L'entité Patient injectée automatiquement
+     * @return Response Vue fiche patient
+     */
+    #[Route('/patients/{id}', name: 'app_patient_show', requirements: ['id' => '\\d+'], methods: ['GET'])]
+    public function show(Patient $patient): Response
+    {
+        return $this->render('patient/show.html.twig', [
+            'patient' => $patient,
+        ]);
+    }
 }
