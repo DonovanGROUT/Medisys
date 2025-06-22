@@ -87,4 +87,36 @@ final class PatientController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
+    /**
+     * Édite un patient existant (route /patients/{id}/edit).
+     *
+     * Affiche et traite le formulaire d'édition de patient. En cas de succès, redirige vers la liste.
+     *
+     * @param Request $request
+     * @param Patient $patient L'entité Patient à éditer (injection automatique)
+     * @param EntityManagerInterface $em
+     * @return Response
+     */
+    #[Route('/patients/{id}/edit', name: 'app_patient_edit', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
+    public function edit(Request $request, Patient $patient, EntityManagerInterface $em): Response
+    {
+        // Crée le formulaire d'édition, pré-rempli avec les données du patient
+        $form = $this->createForm(PatientType::class, $patient);
+        $form->handleRequest($request);
+
+        // Si le formulaire est soumis et valide, on sauvegarde les modifications
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->flush();
+            $this->addFlash('success', 'Patient updated successfully.');
+            // Redirige vers la liste des patients
+            return $this->redirectToRoute('app_patient_index');
+        }
+
+        // Affiche le formulaire d'édition
+        return $this->render('patient/edit.html.twig', [
+            'form' => $form->createView(),
+            'patient' => $patient,
+        ]);
+    }
 }
