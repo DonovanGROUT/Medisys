@@ -51,6 +51,11 @@
                                     <td>
                                         <a href="{{ path('app_patient_show', {'id': patient.id}) }}" class="btn btn-sm btn-primary">Voir</a>
                                         <a href="{{ path('app_patient_edit', {'id': patient.id}) }}" class="btn btn-sm btn-warning ms-1">Modifier</a>
+                                        {# Formulaire de suppression sécurisé (POST + CSRF) #}
+                                        <form method="post" action="{{ path('app_patient_delete', {'id': patient.id}) }}" style="display:inline-block" onsubmit="return confirm('Confirmer la suppression de ce patient ?');">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('delete_patient_' ~ patient.id) }}">
+                                            <button class="btn btn-sm btn-danger ms-1">Supprimer</button>
+                                        </form>
                                     </td>
                                 </tr>
                             {% endfor %}

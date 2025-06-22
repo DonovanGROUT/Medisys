@@ -119,4 +119,30 @@ final class PatientController extends AbstractController
             'patient' => $patient,
         ]);
     }
+
+    /**
+     * Supprime un patient existant (route /patients/{id}/delete).
+     *
+     * Sécurisé par un token CSRF. Redirige vers la liste après suppression.
+     *
+     * @param Request $request
+     * @param Patient $patient L'entité Patient à supprimer (injection automatique)
+     * @param EntityManagerInterface $em
+     * @return Response
+     */
+    #[Route('/patients/{id}/delete', name: 'app_patient_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
+    public function delete(Request $request, Patient $patient, EntityManagerInterface $em): Response
+    {
+        $submittedToken = $request->request->get('_token');
+        // Vérifie la validité du token CSRF
+        if ($this->isCsrfTokenValid('delete_patient_' . $patient->getId(), $submittedToken)) {
+            $em->remove($patient);
+            $em->flush();
+            $this->addFlash('success', 'Patient supprimé avec succès.');
+        } else {
+            $this->addFlash('error', 'Jeton CSRF invalide, suppression annulée.');
+        }
+        // Redirige vers la liste des patients
+        return $this->redirectToRoute('app_patient_index');
+    }
 }
