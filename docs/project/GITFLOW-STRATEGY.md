@@ -91,7 +91,7 @@ docs: update README with installation steps
 ## 📋 Prochaines features prévues
 
 - `feature/patient-entity` : ✅ **TERMINÉE** - Entité Patient avec Doctrine
-- `feature/patient-controllers-forms` : 🔄 **EN COURS** - Contrôleurs et formulaires Patient
+- `feature/patient-controllers-forms` : ✅ **TERMINÉE** - Contrôleurs et formulaires Patient
 - `feature/patient-vuejs-front` : 🚧 **À VENIR** - Interface Patient et homepage en Vue.js
 - `feature/appointment-entity` : 📅 **FUTURE** - Entité Rendez-vous
 - `feature/appointment-controllers` : 📅 **FUTURE** - Interface Rendez-vous
