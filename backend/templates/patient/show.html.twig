@@ -1,0 +1,39 @@
+{#
+    Template Twig : Affichage de la fiche d'un patient
+    -------------------------------------------------
+    Affiche les informations détaillées d'un patient (fiche individuelle).
+    Utilisé par PatientController::show().
+    Variables disponibles :
+        - patient : instance de App\Entity\Patient
+#}
+{% extends 'base.html.twig' %}
+
+{% block title %}Fiche patient - {{ parent() }}{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <h1 class="mb-4">Fiche patient</h1>
+            <table class="table table-bordered">
+                <tbody>
+                    <tr><th>ID</th><td>{{ patient.id }}</td></tr>
+                    <tr><th>Nom</th><td>{{ patient.lastName }}</td></tr>
+                    <tr><th>Prénom</th><td>{{ patient.firstName }}</td></tr>
+                    <tr><th>Date de naissance</th><td>{{ patient.birthDate ? patient.birthDate|date('d/m/Y') : '' }}</td></tr>
+                    <tr><th>Sexe</th><td>{{ patient.gender ?? '' }}</td></tr>
+                    <tr><th>Téléphone</th><td>{{ patient.phone ?? '' }}</td></tr>
+                    <tr><th>Email</th><td>{{ patient.email ?? '' }}</td></tr>
+                    <tr><th>Historique médical</th><td>{{ patient.medicalHistory ?? '' }}</td></tr>
+                </tbody>
+            </table>
+            <a href="{{ path('app_patient_index') }}" class="btn btn-secondary mt-3">&larr; Retour à la liste</a>
+            {# Formulaire de suppression sécurisé (POST + CSRF) #}
+            <form method="post" action="{{ path('app_patient_delete', {'id': patient.id}) }}" style="display:inline-block" onsubmit="return confirm('Confirmer la suppression de ce patient ?');">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete_patient_' ~ patient.id) }}">
+                <button class="btn btn-danger mt-3 ms-2">Supprimer</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

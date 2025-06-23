@@ -1,0 +1,26 @@
+{#
+    Template Twig : Édition d'un patient
+    -----------------------------------
+    Affiche le formulaire d'édition d'un patient (pré-rempli).
+    Utilisé par PatientController::edit().
+    Variables disponibles :
+        - form : vue du formulaire Symfony
+        - patient : l'entité Patient à éditer
+#}
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier patient - {{ parent() }}{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <h1 class="mb-4">Modifier le patient</h1>
+            {{ form_start(form) }}
+                {{ form_widget(form) }}
+                <a href="{{ path('app_patient_index') }}" class="btn btn-secondary mt-3">Annuler</a>
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>
+{% endblock %}
