@@ -1,5 +1,7 @@
 # Phase 3 - Contrôleurs et Formulaires Patient (CRUD)
 
+> **Note historique :** Ce document décrit la structure et les chemins du projet tels qu'ils étaient lors de la phase 3 (avant migration SPA). Depuis la migration vers une architecture SPA, tout le code Symfony a été déplacé dans le dossier `backend/`. Voir le README principal pour la structure actuelle.
+
 ## 🎯 Objectif de cette phase
 
 Mettre en place l’interface complète de gestion des patients : contrôleur Symfony, formulaires, vues Twig, sécurité CSRF, tests fonctionnels robustes et documentation, selon les bonnes pratiques Symfony/Grafikart.
@@ -60,11 +62,22 @@ Mettre en place l’interface complète de gestion des patients : contrôleur 
 
 ## 🔧 Structure technique
 
+### Structure fichiers (avant migration SPA)
+
 ```bash
 src/Controller/PatientController.php           # Contrôleur CRUD
 src/Form/PatientType.php                       # Formulaire Symfony
 templates/patient/                            # Vues Twig (index, show, new, edit)
 tests/Integration/Controller/                  # Tests fonctionnels
+```
+
+### Structure fichiers (après migration SPA)
+
+```bash
+backend/src/Controller/PatientController.php           # Contrôleur CRUD
+backend/src/Form/PatientType.php                       # Formulaire Symfony
+backend/templates/patient/                            # Vues Twig (index, show, new, edit)
+backend/tests/Integration/Controller/                  # Tests fonctionnels
 ```
 
 ## 🎯 Résultat attendu

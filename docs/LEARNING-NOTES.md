@@ -1,5 +1,7 @@
 # Notes d'Apprentissage
 
+> **Note :** Depuis la migration vers une architecture SPA, le projet est structuré en deux dossiers principaux : `backend/` (Symfony API) et `frontend/` (Vue.js SPA). Voir le README principal pour la structure à jour.
+
 ## À propos
 
 Ce fichier centralise mes notes et découvertes au fil de l'apprentissage.

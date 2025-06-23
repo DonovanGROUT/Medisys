@@ -2,6 +2,18 @@
 <!-- DEPLOY-LINK-START -->
 ➡️ [Projet en construction]
 <!-- DEPLOY-LINK-END -->
+
+## 📁 Structure du projet
+
+- `backend/` : Application Symfony (API, configuration, tests, assets, etc.)
+- `frontend/` : Application SPA Vue.js (Vite, Tailwind, composants, vues)
+- `docs/` : Documentation, wireframes, notes, fiches de révision
+- `docker/` : Configuration Docker (base de données, etc.)
+- `compose.yaml` : Orchestration Docker Compose
+- `README.md` : Ce fichier
+
+> Chaque sous-dossier (`backend/`, `frontend/`) possède son propre README pour les instructions spécifiques.
+
 ## 📋 Description
 
 Je démarre l'apprentissage de Symfony 7 et Vue.js en suivant notamment les formations Grafikart pour la partie théorique. Mon objectif est de créer **Medisys**, une application de gestion médicale simple pour l'apprentissage.
@@ -52,6 +64,13 @@ Apprendre Symfony 7 et Vue.js en créant un projet concret inspiré du domaine m
 - Templates Twig
 - CRUD complet pour Patient (show, new, edit, delete)
 - Tests fonctionnels (show, new, edit, delete)
+
+### 🚧 Phase 4 - Interface Patient et homepage en Vue.js : Migration SPA Vue.js (en cours)
+
+- Début de la migration du monolithe Symfony/Twig vers une architecture SPA (Vue.js) + API (Symfony)
+- Séparation claire du backend (Symfony) et du frontend (Vue.js)
+- Nouvelle structure de projet en place
+- Documentation et roadmap détaillées pour la migration progressive
 
 ## 🧪 Tests et Qualité
 

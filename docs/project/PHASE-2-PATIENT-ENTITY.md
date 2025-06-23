@@ -1,5 +1,7 @@
 # Phase 2 - Entité Patient et Tests
 
+> **Note historique :** Ce document décrit la structure et les chemins du projet tels qu'ils étaient lors de la phase 2 (avant migration SPA). Depuis la migration vers une architecture SPA, tout le code Symfony a été déplacé dans le dossier `backend/`. Voir le README principal pour la structure actuelle.
+
 ## 🎯 Objectif de cette phase
 
 Créer la première entité métier `Patient` avec Doctrine ORM, implémenter les tests unitaires et d'intégration, et établir les fondations pour la gestion des données médicales.
@@ -133,7 +135,7 @@ $patient->setFirstName("Donovan")
 - ${DB_USER}@172.19.0.1 pour tests (IP Docker)
 ```
 
-### Structure fichiers
+### Structure fichiers (avant migration SPA)
 
 ```bash
 src/Entity/Patient.php              # Entité métier
@@ -141,6 +143,16 @@ src/Repository/PatientRepository.php # Accès données
 migrations/Version*.php             # Migration DB
 tests/Unit/Entity/PatientTest.php   # Tests unitaires  
 tests/Integration/Repository/       # Tests intégration
+```
+
+### Structure fichiers (après migration SPA)
+
+```bash
+backend/src/Entity/Patient.php              # Entité métier
+backend/src/Repository/PatientRepository.php # Accès données
+backend/migrations/Version*.php             # Migration DB
+backend/tests/Unit/Entity/PatientTest.php   # Tests unitaires  
+backend/tests/Integration/Repository/       # Tests intégration
 ```
 
 ## 🎯 Résultat attendu

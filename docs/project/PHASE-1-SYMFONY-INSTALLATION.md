@@ -1,5 +1,7 @@
 # Phase 1 - Installation Symfony
 
+> **Note historique :** Ce document décrit la structure et les chemins du projet tels qu'ils étaient lors de la phase 1 (avant migration SPA). Depuis la migration vers une architecture SPA, tout le code Symfony a été déplacé dans le dossier `backend/`. Voir le README principal pour la structure actuelle.
+
 ## 🎯 Objectif de cette phase
 
 Installer Symfony 7.3 dans le projet existant en préservant la documentation et structure actuelle, puis effectuer les premiers pas avec le framework.
@@ -54,7 +56,7 @@ rm -rf symfony-temp
 - [x] Comprendre le rôle de chaque répertoire (`src/`, `config/`, `public/`, etc.)
 - [x] Identifier les fichiers de configuration principaux
 
-**Structure attendue après installation** :
+**Structure attendue après installation (avant migration SPA)** :
 
 ```bash
 /Medisys/
@@ -72,6 +74,26 @@ rm -rf symfony-temp
 └── vendor/                      # Dépendances Composer
 ```
 
+### Structure après migration SPA
+
+```bash
+/Medisys/
+├── README.md                    # Documentation du projet
+├── docs/                        # Documentation détaillée
+├── backend/                     # Application Symfony (API, config, src, etc.)
+│   ├── composer.json            # Configuration Symfony
+│   ├── .env                     # Variables d'environnement
+│   ├── bin/                     # Exécutables Symfony
+│   ├── config/                  # Configuration Symfony
+│   ├── public/                  # Point d'entrée web
+│   ├── src/                     # Code source PHP
+│   ├── templates/               # Templates Twig
+│   ├── var/                     # Cache et logs
+│   └── vendor/                  # Dépendances Composer
+├── frontend/                    # Application Vue.js (SPA)
+└── docker/                      # Configurations Docker
+```
+
 ### 4. Premier démarrage de l'application
 
 - [x] Démarrer le serveur de développement PHP
@@ -83,10 +105,10 @@ rm -rf symfony-temp
 
 ```bash
 # Serveur de développement (formation Grafikart)
-php -S localhost:8000 -t public
+php -S localhost:8000 -t backend/public
 
 # Ou avec le CLI Symfony (alternative)
-symfony server:start
+symfony server:start --dir=backend/public
 ```
 
 ### 5. Validation finale de l'installation

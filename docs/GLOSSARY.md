@@ -146,7 +146,7 @@ Glossaire des termes et concepts découverts pendant l'apprentissage du dévelop
 
 **Bundle** : Module Symfony qui ajoute des fonctionnalités. Exemple : DoctrineBundle pour l'ORM.
 
-**Environment (.env)** : Fichier de configuration des variables d'environnement (base de données, debug, secrets).
+**Environment (`backend/.env`)** : Fichier de configuration des variables d'environnement (base de données, debug, secrets) désormais situé dans le dossier backend/.
 
 **Database URL** : Chaîne de connexion à la base de données au format `mysql://user:password@host:port/database`.
 
