@@ -6,7 +6,7 @@
 ## 📁 Structure du projet
 
 - `backend/` : Application Symfony (API, configuration, tests, assets, etc.)
-- `frontend/` : Application SPA Vue.js (Vite, Tailwind, composants, vues)
+- `frontend/` : Application SPA Vue.js (Vite, Tailwind CSS v3, composants, vues)
 - `docs/` : Documentation, wireframes, notes, fiches de révision
 - `docker/` : Configuration Docker (base de données, etc.)
 - `compose.yaml` : Orchestration Docker Compose
@@ -21,6 +21,12 @@ Je démarre l'apprentissage de Symfony 7 et Vue.js en suivant notamment les form
 ## 🎯 Objectif
 
 Apprendre Symfony 7 et Vue.js en créant un projet concret inspiré du domaine médical (gestion de patients et rendez-vous).
+
+## 🖥️ Stack technique
+
+- Backend : Symfony 7 (API)
+- Frontend : Vue 3, Vite, TypeScript, Tailwind CSS v3
+- Docker, MySQL
 
 ## 📚 Ressources et Documentation
 

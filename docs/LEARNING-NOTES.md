@@ -1,6 +1,8 @@
 # Notes d'Apprentissage
 
 > **Note :** Depuis la migration vers une architecture SPA, le projet est structuré en deux dossiers principaux : `backend/` (Symfony API) et `frontend/` (Vue.js SPA). Voir le README principal pour la structure à jour.
+>
+> **Frontend** : L'intégration de Tailwind CSS utilise la version 3.x (la version 4 ne fournit plus de CLI local compatible avec Vite/NPM 10+). Voir README frontend pour la démarche complète.
 
 ## À propos
 
