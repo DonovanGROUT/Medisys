@@ -1,6 +1,6 @@
 # .gitignore racine (Medisys)
 
-# Ignorer les dépendances et fichiers générés du backend
+# Backend
 /backend/var/
 /backend/vendor/
 /backend/.phpunit.cache/
@@ -11,18 +11,36 @@
 /backend/.editorconfig
 /backend/.gitignore
 
-# Ignorer les dépendances et fichiers générés du frontend
+# Frontend
 /frontend/node_modules/
 /frontend/dist/
+/frontend/dist-ssr/
+/frontend/.vite/
+/frontend/.cache/
+/frontend/.turbo/
+/frontend/.output/
+/frontend/.env
+/frontend/.env.*
+/frontend/coverage/
 
 # Fichiers temporaires globaux
 *.log
+*.tmp
+*.temp
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 .DS_Store
 Thumbs.db
 
-# Ignorer les fichiers de configuration d'IDE
+# IDE
 .idea/
 *.iml
+.vscode/*
+!.vscode/extensions.json
 
 # Docker et scripts sensibles
 init.sql
