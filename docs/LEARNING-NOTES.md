@@ -1,8 +1,9 @@
 # Notes d'Apprentissage
 
 > **Note :** Depuis la migration vers une architecture SPA, le projet est structuré en deux dossiers principaux : `backend/` (Symfony API) et `frontend/` (Vue.js SPA). Voir le README principal pour la structure à jour.
->
+
 > **Frontend** : L'intégration de Tailwind CSS utilise la version 3.x (la version 4 ne fournit plus de CLI local compatible avec Vite/NPM 10+). Voir README frontend pour la démarche complète.
+>
 
 ## À propos
 
@@ -120,8 +121,6 @@ Ce fichier centralise mes notes et découvertes au fil de l'apprentissage.
 - Utilisation de PHPDoc pour documenter entités, repositories, contrôleurs et tests
 - Gestion de la sécurité et de la conformité (audit trail, validation, RGPD)
 
-> Prochaine étape : Continuer la phase 3.
-
 ## Symfony - Approche CRUD et tests fonctionnels
 
 - **CRUD Symfony** : Chaque action (show, new, edit, delete) correspond à une méthode du contrôleur, un template Twig dédié et un test fonctionnel associé.
@@ -129,6 +128,21 @@ Ce fichier centralise mes notes et découvertes au fil de l'apprentissage.
 - **Tests fonctionnels** : Utilisation de WebTestCase pour simuler des requêtes HTTP et vérifier le rendu (voir PatientControllerTest).
 - **PHPDoc** : Documentation systématique des classes et méthodes critiques (contrôleurs, entités, tests) pour la maintenabilité.
 - **Documentation des templates** : Bloc de commentaire en tête de chaque .html.twig pour décrire l’usage et les variables attendues.
+
+**Phase 4 - Interface Patient et homepage en Vue.js (en cours)**
+
+- Migration progressive du monolithe Symfony/Twig vers une architecture SPA (Vue.js) + API (Symfony)
+- Découplage complet backend (Symfony API) / frontend (SPA Vue 3, Vite, TypeScript, Tailwind CSS)
+- Développement frontend avec mocks de données pour permettre un travail itératif et indépendant du backend
+- Création et typage strict de tous les composants et vues Vue.js
+- Ajout de tests unitaires pour tous les composants principaux (Vitest + jsdom)
+- Formatage automatique systématique avec Prettier (`npm run format`)
+- Scripts npm utiles : `dev`, `test`, `format`
+- Validation régulière des tests (`npm run test`) et du formatage
+- Difficulté rencontrée : erreurs TypeScript dans les tests résolues par l’ajout de "vitest" dans `tsconfig.json`
+- Prochaine étape : intégration et tests de l’API Symfony avec le frontend Vue.js
+
+---
 
 ## Vue.js
 
@@ -199,3 +213,5 @@ Notes des difficultés et solutions trouvées
 - Exemple de test robuste : voir `PatientControllerDeleteTest.php`.
 
 > Notes mises à jour au fur et à mesure de l'apprentissage
+
+---
