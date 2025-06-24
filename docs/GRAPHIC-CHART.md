@@ -11,14 +11,50 @@ Définir les bases graphiques et UI du projet Medisys pour aspirer à la cohére
 
 ## 🎨 Palette de couleurs
 
-| Couleur            | Code      |
-|--------------------|-----------|
-| Bleu santé principal     | #1976D2   |
-| Vert validation    | #43A047   |
-| Rouge alerte       | #E53935   |
-| Gris clair         | #F5F5F5   |
-| Gris foncé         | #263238   |
-| Blanc              | #FFFFFF   |
+| Usage               | Ancien code | Nouveau (Tailwind) | Code Tailwind |
+|---------------------|-------------|--------------------|--------------|
+| Bleu principal      | #1976D2     | blue-800           | #1e40af      |
+| Vert validation     | #43A047     | green-800          | #166534      |
+| Rouge alerte        | #E53935     | red-800            | #991b1b      |
+| Gris clair          | #F5F5F5     | gray-100           | #f5f5f5      |
+| Gris foncé          | #263238     | slate-800          | #263238      |
+| Blanc               | #FFFFFF     | white              | #ffffff      |
+
+> **Accessibilité** : Toutes les couleurs d’action (boutons, alertes, liens) doivent utiliser ces classes Tailwind pour avoir un contraste AA/AAA.
+
+## 🧩 Exemples UI accessibles
+
+- **Bouton principal** :
+
+  ```html
+  <button class="rounded-[6px] bg-blue-800 text-white px-4 py-2 font-semibold hover:bg-blue-900 focus:outline focus:outline-2 focus:outline-blue-800">
+    Action principale
+  </button>
+  ```
+
+- **Bouton validation** :
+
+  ```html
+  <button class="rounded-[6px] bg-green-800 text-white px-4 py-2 font-semibold hover:bg-green-900 focus:outline focus:outline-2 focus:outline-green-800">
+    Valider
+  </button>
+  ```
+
+- **Alerte succès** :
+
+  ```html
+  <div class="bg-green-800 text-white rounded-[6px] px-4 py-2">
+    Succès !
+  </div>
+  ```
+
+- **Alerte erreur** :
+
+  ```html
+  <div class="bg-red-800 text-white rounded-[6px] px-4 py-2">
+    Erreur !
+  </div>
+  ```
 
 ## 🅰️ Typographie
 
@@ -68,4 +104,5 @@ Définir les bases graphiques et UI du projet Medisys pour aspirer à la cohére
 
 ---
 
-> Ce document sert de référence lors du développement.
+> Ce document sert de référence lors du développement.  
+> **Note** : L’ancienne palette reste en référence pour l’inspiration, mais la palette Tailwind accessible doit être utilisée dans tout le code.
