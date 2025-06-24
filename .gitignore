@@ -10,6 +10,8 @@
 /backend/.vscode/
 /backend/.editorconfig
 /backend/.gitignore
+/backend/assets/vendor/
+/backend/public/assets/
 
 # Frontend
 /frontend/node_modules/
@@ -48,3 +50,6 @@ docker/mysql/init.sql
 
 # Docker
 **/.docker/
+
+# Node modules
+/node_modules/
