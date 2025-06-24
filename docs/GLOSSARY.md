@@ -162,6 +162,10 @@ Glossaire des termes et concepts découverts pendant l'apprentissage du dévelop
 
 **RGPD** : Règlement sur la protection des données. Exige sécurisation et contrôle d'accès aux données personnelles.
 
+---
+
+## Concepts avancés Symfony/Doctrine
+
 **Repository Pattern** : Couche d'abstraction pour l'accès aux données, sépare la logique métier de la persistance.
 
 **Migration** : Script de modification de schéma de base de données, versionnée et reproductible.
@@ -184,12 +188,24 @@ Glossaire des termes et concepts découverts pendant l'apprentissage du dévelop
 
 Action du CRUD permettant de modifier une entité existante (ex : patient). Implique un formulaire pré-rempli, une validation et une sauvegarde en base.
 
-### FormType
-
-Classe Symfony qui définit la structure d'un formulaire (champs, validation, options). Utilisée pour la création et l'édition d'entités.
-
 ### Test fonctionnel
 
 Test automatisé qui simule une requête HTTP et vérifie le comportement d'une page ou d'une action complète (ex : création, édition, affichage d'un patient).
+
+## 🆕 Concepts frontend modernes
+
+**SPA (Single Page Application)** : Application web dont l’interface est chargée une seule fois, puis mise à jour dynamiquement côté client sans rechargement complet. Permet une expérience utilisateur fluide et rapide.
+
+**Vite** : Outil de build et serveur de développement ultra-rapide pour les projets frontend modernes (Vue, React, etc.), basé sur ESBuild et Rollup.
+
+**Vitest** : Framework de tests unitaires pour projets frontend (notamment Vue.js), compatible Jest, rapide et typé, avec support jsdom pour simuler le DOM.
+
+**Prettier** : Outil de formatage automatique du code (JS, TS, Vue, CSS, etc.), garantit une cohérence de style dans toute la base de code.
+
+**Mock (mock de données)** : Fausse donnée ou fausse API utilisée pour simuler le backend lors du développement frontend, avant la connexion à une vraie API.
+
+**jsdom** : Librairie qui simule un environnement DOM dans Node.js, permettant de tester des composants frontend sans navigateur réel.
+
+**TDD (Test Driven Development)** : Approche de développement où l’on écrit d’abord les tests, puis le code qui les fait passer, pour garantir la robustesse et la maintenabilité.
 
 >Glossaire enrichi au fur et à mesure des découvertes
