@@ -15,14 +15,15 @@ composer require webapp  # Ajoute les composants web essentiels
 
 ```bash
 /projet-symfony/
-├── composer.json        # Dépendances et configuration
-├── .env                 # Variables d'environnement
-├── bin/console          # CLI Symfony
-├── config/              # Configuration Symfony
-├── public/index.php     # Point d'entrée web
-├── src/                 # Code source PHP
-├── templates/           # Templates Twig
-└── var/                 # Cache et logs
+├── backend/
+│   ├── composer.json        # Dépendances et configuration
+│   ├── .env                 # Variables d'environnement
+│   ├── bin/console          # CLI Symfony
+│   ├── config/              # Configuration Symfony
+│   ├── public/index.php     # Point d'entrée web
+│   ├── src/                 # Code source PHP
+│   ├── templates/           # Templates Twig
+│   └── var/                 # Cache et logs
 ```
 
 ## 🗄️ Base de données avec Doctrine
