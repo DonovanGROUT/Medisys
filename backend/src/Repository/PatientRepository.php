@@ -58,4 +58,28 @@ class PatientRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
+    /**
+     * Ajoute un patient en base
+     */
+    public function add(Patient $entity, bool $flush = false): void
+    {
+        $em = $this->getEntityManager();
+        $em->persist($entity);
+        if ($flush) {
+            $em->flush();
+        }
+    }
+
+    /**
+     * Supprime un patient de la base
+     */
+    public function remove(Patient $entity, bool $flush = false): void
+    {
+        $em = $this->getEntityManager();
+        $em->remove($entity);
+        if ($flush) {
+            $em->flush();
+        }
+    }
 }

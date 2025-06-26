@@ -63,9 +63,9 @@ class PatientType extends AbstractType
             ->add('gender', ChoiceType::class, [
                 'label' => 'Sexe',
                 'choices' => [
-                    'Homme' => 'Homme',
-                    'Femme' => 'Femme',
-                    'Autre' => 'Autre',
+                    'Homme' => 'M',
+                    'Femme' => 'F',
+                    'Autre' => 'X',
                 ],
             ])
             ->add('medicalHistory', TextareaType::class, [
