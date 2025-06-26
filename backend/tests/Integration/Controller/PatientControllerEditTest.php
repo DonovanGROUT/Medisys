@@ -38,7 +38,7 @@ class PatientControllerEditTest extends WebTestCase
             ->setEmail($uniqueEmail)
             ->setPhone('0601020304')
             ->setBirthDate(new \DateTime('1980-01-01'))
-            ->setGender('Homme');
+            ->setGender('M');
         $em->persist($patient);
         $em->flush();
 
@@ -54,7 +54,7 @@ class PatientControllerEditTest extends WebTestCase
             'patient[email]' => 'edit2.' . $uniqueEmail,
             'patient[phone]' => '0708091011',
             'patient[birthDate]' => '1990-12-31',
-            'patient[gender]' => 'Homme',
+            'patient[gender]' => 'M',
         ]);
         $client->submit($form);
 
@@ -72,7 +72,9 @@ class PatientControllerEditTest extends WebTestCase
                 $this->assertStringContainsString('Dupont-Édité', $rowText);
                 $this->assertStringContainsString('edit2.' . $uniqueEmail, $rowText);
                 $this->assertStringContainsString('0708091011', $rowText);
-                $this->assertStringContainsString('31/12/1990', $rowText);
+                // On attend explicitement le format d/m/Y (année sur 4 chiffres)
+                $expectedDate = (new \DateTime('1990-12-31'))->format('d/m/Y');
+                $this->assertStringContainsString($expectedDate, $rowText, 'La date de naissance doit être affichée au format d/m/Y (année sur 4 chiffres).');
                 $found = true;
                 break;
             }

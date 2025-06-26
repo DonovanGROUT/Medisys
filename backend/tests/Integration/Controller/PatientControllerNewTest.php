@@ -28,7 +28,7 @@ class PatientControllerNewTest extends WebTestCase
             'patient[email]' => $uniqueEmail,
             'patient[phone]' => '0612345678',
             'patient[birthDate]' => '1990-05-10',
-            'patient[gender]' => 'Femme',
+            'patient[gender]' => 'F',
             'patient[medicalHistory]' => 'RAS',
         ]);
         $client->submit($form);

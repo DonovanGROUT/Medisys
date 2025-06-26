@@ -37,7 +37,7 @@ class PatientControllerShowTest extends WebTestCase
             ->setEmail($uniqueEmail)
             ->setPhone('0601020304')
             ->setBirthDate(new \DateTime('1980-01-01'))
-            ->setGender('Homme');
+            ->setGender('M');
         $em->persist($patient);
         $em->flush();
 
