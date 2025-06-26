@@ -1,0 +1,169 @@
+openapi: 3.0.0
+info:
+  title: 'Medisys API'
+  description: 'API REST pour la gestion des patients (Symfony 7)'
+  version: 1.0.0
+paths:
+  /api/patients:
+    get:
+      summary: 'Liste des patients'
+      description: "Liste tous les patients.\nGET /api/patients"
+      operationId: 921353045b66dfd1c79edcbec7419528
+      responses:
+        '200':
+          description: 'Liste des patients'
+    post:
+      summary: 'Créer un patient'
+      description: "Crée un nouveau patient.\nPOST /api/patients"
+      operationId: a0406d1be49fb33909bda966cac41828
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Patient'
+      responses:
+        '201':
+          description: 'Patient créé'
+        '400':
+          description: 'Données invalides'
+  '/api/patients/{id}':
+    get:
+      summary: "Détail d'un patient"
+      description: "Détail d'un patient par son identifiant.\nGET /api/patients/{id}"
+      operationId: e829254e2a9413d4b7e911b1f5ca22db
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'ID du patient'
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 'Détail du patient'
+        '404':
+          description: 'Patient non trouvé'
+    put:
+      summary: 'Mettre à jour un patient'
+      description: "Met à jour totalement un patient (remplacement complet).\nPUT /api/patients/{id}\nÀ utiliser pour remplacer toutes les données d'un patient."
+      operationId: 98d4596ee582c4cc4c17d591b3fe66f4
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'ID du patient'
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Patient'
+      responses:
+        '200':
+          description: 'Patient mis à jour'
+        '400':
+          description: 'Données invalides'
+        '404':
+          description: 'Patient non trouvé'
+    delete:
+      summary: 'Supprimer un patient'
+      description: "Supprime un patient.\nDELETE /api/patients/{id}"
+      operationId: 48f6ac3a000288068d1c77a7ed4b9056
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'ID du patient'
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: 'Patient supprimé'
+        '404':
+          description: 'Patient non trouvé'
+    patch:
+      summary: 'Modifier partiellement un patient'
+      description: "Modifie partiellement un patient (modification recommandée).\nPATCH /api/patients/{id}\nPrivilégier cette méthode pour la modification côté front."
+      operationId: 48b29437eb83cf12e1bf76824ef2aac4
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'ID du patient'
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Patient'
+      responses:
+        '200':
+          description: 'Patient modifié'
+        '400':
+          description: 'Données invalides'
+        '404':
+          description: 'Patient non trouvé'
+components:
+  schemas:
+    Patient:
+      required:
+        - firstName
+        - lastName
+        - email
+        - birthDate
+        - gender
+      properties:
+        id:
+          description: 'Identifiant unique du patient'
+          type: integer
+          example: 1
+        firstName:
+          description: 'Prénom du patient'
+          type: string
+          example: Jean
+        lastName:
+          description: 'Nom du patient'
+          type: string
+          example: Dupont
+        email:
+          description: 'Adresse email du patient'
+          type: string
+          format: email
+          example: jean.dupont@email.com
+        phone:
+          description: 'Numéro de téléphone du patient'
+          type: string
+          example: '+33612345678'
+        birthDate:
+          description: 'Date de naissance (YYYY-MM-DD)'
+          type: string
+          format: date
+          example: '1990-01-01'
+        gender:
+          description: 'Genre du patient (M=Homme, F=Femme, X=Autre)'
+          type: string
+          example: M
+        medicalHistory:
+          description: 'Historique médical du patient'
+          type: string
+          example: 'Aucune allergie connue'
+        createdAt:
+          description: 'Date de création du dossier'
+          type: string
+          format: date-time
+          example: '2025-06-25T10:00:00+00:00'
+        updatedAt:
+          description: 'Date de dernière modification'
+          type: string
+          format: date-time
+          example: '2025-06-25T10:00:00+00:00'
+      type: object

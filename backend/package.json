@@ -1,0 +1,5 @@
+{
+    "scripts": {
+        "openapi:generate": "vendor/bin/openapi --format yaml -o public/openapi.yaml src/"
+    }
+}
