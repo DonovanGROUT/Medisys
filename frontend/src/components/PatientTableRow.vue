@@ -1,9 +1,10 @@
 <!--
-  -----------------------------------------------------------------------------
-  Ligne de tableau patient (modulaire, accessible, responsive)
-  -----------------------------------------------------------------------------
-  Affiche les informations principales d’un patient sous forme de ligne de tableau.
-  Utilisé dans la vue liste des patients (tableau principal).
+  PatientTableRow.vue — Ligne de tableau patient (affichage principal, accessible)
+  -------------------------------------------------------------------------------
+  Composant Vue 3 pour l’affichage d’un patient dans un tableau.
+  - Utilisé dans la vue liste des patients (tableau principal)
+  - Accessibilité renforcée (icônes, aria-label, focus, responsive)
+  - Props typées, slot actions personnalisable
 
   Props :
     - id (number|string) : identifiant unique du patient
@@ -26,14 +27,23 @@
 
   Exemple d’utilisation :
     <PatientTableRow v-bind="patient" />
-
-  -----------------------------------------------------------------------------
 -->
 <template>
   <!-- Ligne principale du tableau patient -->
   <tr>
     <td class="px-2 py-2 sm:px-4 sm:py-2 text-sm sm:text-base">{{ id }}</td>
-    <td class="px-2 py-2 sm:px-4 sm:py-2 text-sm sm:text-base">{{ gender }}</td>
+    <td class="px-2 py-2 sm:px-4 sm:py-2 text-sm sm:text-base">
+      <BaseIcon
+        :name="gender === 'F' ? 'female' : gender === 'M' ? 'male' : 'transgender'"
+        color="#1976D2"
+        size="1.5em"
+        class="align-middle"
+        :aria-label="gender === 'F' ? 'Femme' : gender === 'M' ? 'Homme' : 'Autre'"
+      />
+      <span class="sr-only">
+        {{ gender === 'F' ? 'Femme' : gender === 'M' ? 'Homme' : 'Autre' }}
+      </span>
+    </td>
     <td class="px-2 py-2 sm:px-4 sm:py-2 text-sm sm:text-base max-w-[100px] break-words">
       {{ lastName }}
     </td>
@@ -43,7 +53,7 @@
     <td
       class="px-2 py-2 sm:px-4 sm:py-2 min-[810px]:table-cell min-[640px]:hidden hidden text-sm sm:text-base"
     >
-      {{ birthDate }}
+      {{ birthDateFormatted }}
     </td>
     <td class="px-2 py-2 sm:px-4 sm:py-2 xl:table-cell hidden text-sm sm:text-base">{{ phone }}</td>
     <td class="px-2 py-2 sm:px-4 sm:py-2 2xl:table-cell hidden text-sm sm:text-base">
@@ -79,10 +89,20 @@
 </template>
 
 <script setup lang="ts">
-// -----------------------------------------------------------------------------
-// Définition des props typées (TypeScript)
-// -----------------------------------------------------------------------------
-defineProps<{
+import BaseIcon from './BaseIcon.vue';
+import { computed } from 'vue';
+
+/**
+ * Props du composant PatientTableRow
+ * @prop {number|string} id - Identifiant unique du patient
+ * @prop {string} gender - Genre ('M', 'F', ou autre)
+ * @prop {string} lastName - Nom du patient
+ * @prop {string} firstName - Prénom du patient
+ * @prop {string} birthDate - Date de naissance (formatée)
+ * @prop {string} phone - Numéro de téléphone
+ * @prop {string} email - Adresse email
+ */
+const props = defineProps<{
   id: number | string;
   gender: string;
   lastName: string;
@@ -91,4 +111,17 @@ defineProps<{
   phone: string;
   email: string;
 }>();
+
+/**
+ * Date de naissance formatée selon la langue du navigateur
+ */
+const birthDateFormatted = computed(() => {
+  if (!props.birthDate) return '';
+  const date = new Date(props.birthDate);
+  // Format jj/mm/aaaa si navigateur français, sinon format local
+  if (navigator.language.startsWith('fr')) {
+    return date.toLocaleDateString('fr-FR');
+  }
+  return date.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+});
 </script>

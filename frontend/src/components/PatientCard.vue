@@ -1,10 +1,10 @@
 <!--
+  PatientCard.vue — Carte patient (affichage principal, accessible, modulaire)
   -----------------------------------------------------------------------------
-  Composant carte patient (modulaire, accessible, responsive)
-  -----------------------------------------------------------------------------
-  Affiche les informations principales d’un patient sous forme de carte stylisée.
-  Utilisé dans la liste des patients ou ailleurs pour présenter un patient de façon
-  compacte et visuelle.
+  Composant Vue 3 pour l’affichage synthétique d’un patient.
+  - Utilisé dans les listes, dashboards, ou vues patient
+  - Accessibilité renforcée (icônes, aria-label, focus, contraste)
+  - Props typées, slot actions personnalisable
 
   Props :
     - id (number|string) : identifiant unique du patient
@@ -27,8 +27,6 @@
 
   Exemple d’utilisation :
     <PatientCard v-bind="patient" />
-
-  -----------------------------------------------------------------------------
 -->
 <template>
   <!-- Carte principale du patient -->
@@ -42,11 +40,15 @@
         color="#1976D2"
         size="2em"
         class="bg-white rounded-full shadow p-1"
+        :aria-label="gender === 'F' ? 'Femme' : gender === 'M' ? 'Homme' : 'Autre'"
       />
+      <span class="sr-only">
+        {{ gender === 'F' ? 'Femme' : gender === 'M' ? 'Homme' : 'Autre' }}
+      </span>
       <span class="font-bold text-[#263238] text-lg">{{ lastName }} {{ firstName }}</span>
     </div>
     <!-- Informations principales -->
-    <div class="text-base text-[#263238] mb-1">{{ birthDate }}</div>
+    <div class="text-base text-[#263238] mb-1">{{ birthDateFormatted }}</div>
     <div class="text-base text-[#263238] mb-1">{{ phone }}</div>
     <div class="text-base text-[#263238] mb-1">{{ email }}</div>
     <!-- Actions (slot ou fallback) -->
@@ -85,11 +87,22 @@
 // Import du composant d’icône de base (Material Icons SVG)
 // -----------------------------------------------------------------------------
 import BaseIcon from './BaseIcon.vue';
+import { computed } from 'vue';
 
 // -----------------------------------------------------------------------------
 // Définition des props typées (TypeScript)
 // -----------------------------------------------------------------------------
-defineProps<{
+/**
+ * Props du composant PatientCard
+ * @prop {number|string} id - Identifiant unique du patient
+ * @prop {string} gender - Genre ('M', 'F', ou autre)
+ * @prop {string} lastName - Nom du patient
+ * @prop {string} firstName - Prénom du patient
+ * @prop {string} birthDate - Date de naissance (formatée)
+ * @prop {string} phone - Numéro de téléphone
+ * @prop {string} email - Adresse email
+ */
+const props = defineProps<{
   id: number | string;
   gender: string;
   lastName: string;
@@ -98,4 +111,17 @@ defineProps<{
   phone: string;
   email: string;
 }>();
+
+/**
+ * Date de naissance formatée selon la langue du navigateur
+ */
+const birthDateFormatted = computed(() => {
+  if (!props.birthDate) return '';
+  const date = new Date(props.birthDate);
+  // Format jj/mm/aaaa si navigateur français, sinon format local
+  if (navigator.language.startsWith('fr')) {
+    return date.toLocaleDateString('fr-FR');
+  }
+  return date.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+});
 </script>

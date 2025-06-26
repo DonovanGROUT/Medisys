@@ -1,9 +1,10 @@
 <!--
-  -----------------------------------------------------------------------------
-  Vue détaillée d’un patient (lecture seule, modulaire, accessible)
-  -----------------------------------------------------------------------------
-  Affiche les informations détaillées d’un patient sous forme de fiche.
-  Utilisé dans les modales ou pages de consultation patient.
+  PatientView.vue — Vue détaillée d’un patient (lecture seule, accessible)
+  ------------------------------------------------------------------------
+  Composant Vue 3 pour l’affichage détaillé d’un patient.
+  - Utilisé dans les modales ou pages de consultation patient
+  - Accessibilité renforcée (icônes, contraste, fallback tiret)
+  - Props typées
 
   Props :
     - patient (objet Patient) : données du patient à afficher
@@ -15,8 +16,6 @@
 
   Exemple d’utilisation :
     <PatientView :patient="patient" />
-
-  -----------------------------------------------------------------------------
 -->
 <template>
   <!-- Fiche détaillée du patient -->
@@ -40,7 +39,7 @@
     </div>
     <div class="flex items-center gap-2">
       <BaseIcon name="cake" color="#1976D2" size="1.3em" />
-      <span class="font-semibold">Date de naissance :</span> {{ patient.dateNaissance }}
+      <span class="font-semibold">Date de naissance :</span> {{ birthDateFormatted }}
     </div>
     <div class="flex items-center gap-2">
       <BaseIcon name="call" color="#1976D2" size="1.3em" />
@@ -58,8 +57,23 @@
 // Import du composant d’icône de base (Material Icons SVG)
 // -----------------------------------------------------------------------------
 import BaseIcon from './BaseIcon.vue';
-// -----------------------------------------------------------------------------
-// Définition des props typées (TypeScript)
-// -----------------------------------------------------------------------------
-defineProps<{ patient: any }>();
+import { computed } from 'vue';
+
+/**
+ * Props du composant PatientView
+ * @prop {Patient} patient - Données du patient à afficher
+ */
+const props = defineProps<{ patient: any }>();
+
+/**
+ * Date de naissance formatée selon la langue du navigateur
+ */
+const birthDateFormatted = computed(() => {
+  if (!props.patient?.dateNaissance) return '';
+  const date = new Date(props.patient.dateNaissance);
+  if (navigator.language.startsWith('fr')) {
+    return date.toLocaleDateString('fr-FR');
+  }
+  return date.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+});
 </script>

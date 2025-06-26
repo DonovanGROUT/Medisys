@@ -39,14 +39,20 @@
 // -----------------------------------------------------------------------------
 import { computed } from 'vue';
 import BaseIcon from './BaseIcon.vue';
+
+/**
+ * Props du composant Alert
+ * @prop {'info'|'success'|'error'} type - Type d’alerte
+ * @prop {string} message - Texte à afficher
+ */
 const props = defineProps<{
   type: 'info' | 'success' | 'error';
   message: string;
 }>();
 
-// -----------------------------------------------------------------------------
-// Calcul de la classe CSS selon le type d’alerte
-// -----------------------------------------------------------------------------
+/**
+ * Classe CSS calculée selon le type d’alerte
+ */
 const alertClass = computed(() => {
   switch (props.type) {
     case 'success':

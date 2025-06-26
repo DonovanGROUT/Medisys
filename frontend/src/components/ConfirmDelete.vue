@@ -38,6 +38,7 @@
         @click="$emit('confirm')"
         class="rounded-[6px] border border-red-800 bg-red-800 text-white px-4 py-2 font-semibold hover:bg-red-900 transition-colors duration-200 focus:outline focus:outline-2 focus:outline-red-800"
         autofocus
+        data-testid="confirm-delete-btn"
       >
         <BaseIcon name="delete" size="1.2em" class="mr-1 align-middle" /> Supprimer
       </button>
@@ -50,8 +51,11 @@
 // Import du composant d’icône de base (Material Icons SVG)
 // -----------------------------------------------------------------------------
 import BaseIcon from './BaseIcon.vue';
-// -----------------------------------------------------------------------------
-// Définition des événements émis
-// -----------------------------------------------------------------------------
+
+/**
+ * Événements émis par le composant ConfirmDelete
+ * @emits confirm - Confirmation de la suppression
+ * @emits cancel - Annulation
+ */
 defineEmits(['confirm', 'cancel']);
 </script>

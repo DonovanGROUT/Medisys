@@ -66,9 +66,11 @@
 // Import du composant d’icône de base (Material Icons SVG)
 // -----------------------------------------------------------------------------
 import BaseIcon from './BaseIcon.vue';
-// -----------------------------------------------------------------------------
-// Définition des props typées (TypeScript)
-// -----------------------------------------------------------------------------
+
+/**
+ * Props du composant Modal
+ * @prop {boolean} modelValue - Contrôle l’ouverture/fermeture de la modale (v-model)
+ */
 defineProps<{ modelValue: boolean }>();
 defineEmits(['update:modelValue']);
 </script>

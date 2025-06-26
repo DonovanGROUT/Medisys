@@ -43,6 +43,13 @@
 // -----------------------------------------------------------------------------
 import { computed } from 'vue';
 
+/**
+ * Props du composant BaseIcon
+ * @prop {string} name - Nom de l'icône (ex: 'delete', 'edit', 'user')
+ * @prop {'material'|'fa'} [type] - Type d’icône ('material' par défaut)
+ * @prop {string} [size] - Taille CSS (ex: '24px', '1.5em')
+ * @prop {string} [color] - Couleur CSS
+ */
 const props = defineProps<{
   name: string; // nom de l'icône (ex: 'delete', 'edit', 'user')
   type?: 'material' | 'fa'; // 'material' (par défaut) ou 'fa' (FontAwesome)
@@ -50,10 +57,14 @@ const props = defineProps<{
   color?: string;
 }>();
 
-// -----------------------------------------------------------------------------
-// Détermination du type d’icône et du style
-// -----------------------------------------------------------------------------
+/**
+ * Type d’icône à afficher ('material' ou 'fa')
+ */
 const iconType = computed(() => props.type || 'material');
+
+/**
+ * Style CSS appliqué à l’icône (taille, couleur)
+ */
 const iconStyle = computed(() => ({
   fontSize: props.size || '1.5em',
   color: props.color || 'inherit',

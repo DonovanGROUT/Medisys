@@ -12,7 +12,11 @@
     "noUncheckedSideEffectImports": true,
 
     /* Library */
-    "lib": ["es2015", "dom"]
+    "lib": ["es2020", "dom"],
+
+    /* Vitest */
+    "types": ["vitest"]
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"]
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"],
+  "exclude": ["**/*.spec.ts", "**/__tests__/*"]
 }

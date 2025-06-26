@@ -37,6 +37,7 @@
       @click="$emit('edit')"
       class="rounded-[6px] bg-green-800 text-white px-4 py-2 text-base font-semibold hover:bg-green-900 focus:outline focus:outline-2 focus:outline-green-800 text-center"
       aria-label="Modifier le patient"
+      data-testid="edit-patient-btn"
     >
       Modifier
     </button>
@@ -45,6 +46,7 @@
       :disabled="deleteDisabled"
       class="rounded-[6px] bg-red-800 text-white px-4 py-2 text-base font-semibold text-center"
       aria-label="Supprimer le patient"
+      data-testid="delete-patient-btn"
     >
       Supprimer
     </button>

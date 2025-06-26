@@ -14,6 +14,9 @@
       <h2 class="text-2xl font-bold text-[#1976D2] mb-4 text-center">Liste des patients</h2>
       <!-- Alertes (gérées globalement dans App.vue) -->
       <div class="mb-4">
+        <div v-if="errors.global" class="text-red-600 font-bold mb-4" data-testid="error-message">
+          {{ errors.global }}
+        </div>
         <!-- Les alertes globales sont désormais gérées par App.vue -->
       </div>
       <!-- Boutons d’action principaux (ajout, retour) -->
@@ -47,6 +50,7 @@
           :birthDate="patient.dateNaissance"
           :phone="patient.telephone"
           :email="patient.email"
+          data-testid="patient-row"
         >
           <template #actions>
             <PatientActions
@@ -115,6 +119,7 @@
               :birthDate="patient.dateNaissance"
               :phone="patient.telephone"
               :email="patient.email"
+              data-testid="patient-row"
             >
               <template #actions>
                 <PatientActions
@@ -140,10 +145,15 @@
           <span v-else-if="modalMode === 'view'">Fiche patient</span>
         </template>
         <template v-if="modalMode === 'create'">
-          <PatientForm @submit="handleSubmit" @cancel="closeModal" />
+          <PatientForm @submit="handleSubmit" @cancel="closeModal" :errors="errors" />
         </template>
         <template v-else-if="modalMode === 'edit'">
-          <PatientForm :model-value="selectedPatient" @submit="handleSubmit" @cancel="closeModal" />
+          <PatientForm
+            :model-value="selectedPatient"
+            @submit="handleSubmit"
+            @cancel="closeModal"
+            :errors="errors"
+          />
         </template>
         <template v-else-if="modalMode === 'view'">
           <PatientView :patient="selectedPatient" />
@@ -185,64 +195,70 @@ import PatientView from '../components/PatientView.vue';
 import PatientActions from '../components/PatientActions.vue';
 import ConfirmDelete from '../components/ConfirmDelete.vue';
 import BaseIcon from '../components/BaseIcon.vue';
-import { ref } from 'vue';
+import {
+  fetchPatients,
+  createPatient,
+  updatePatient,
+  deletePatient,
+} from '../services/patientService';
+import type { ApiPatient } from '../services/patientService';
+import { ref, onMounted } from 'vue';
 
-// Mock de patients (à remplacer par l’API plus tard)
-const patients = ref([
-  {
-    id: 1,
-    sexe: 'F',
-    nom: 'Dupont',
-    prenom: 'Marie',
-    dateNaissance: '1985-04-12',
-    telephone: '0601020304',
-    email: 'marie.dupont@email.com',
-  },
-  {
-    id: 2,
-    sexe: 'M',
-    nom: 'Martin',
-    prenom: 'Paul',
-    dateNaissance: '1978-11-23',
-    telephone: '',
-    email: '',
-  },
-  {
-    id: 3,
-    sexe: 'F',
-    nom: 'Durand',
-    prenom: 'Sophie',
-    dateNaissance: '1992-07-05',
-    telephone: '0611223344',
-    email: 'sophie.durand@email.com',
-  },
-  {
-    id: 4,
-    sexe: 'X',
-    nom: 'Alex',
-    prenom: 'Morgan',
-    dateNaissance: '1990-01-01',
-    telephone: '0612345678',
-    email: 'alex.morgan@email.com',
-  },
-]);
+// Définition du type Patient local (adapté au front)
+interface Patient {
+  id: number;
+  sexe: string;
+  nom: string;
+  prenom: string;
+  dateNaissance: string;
+  telephone: string;
+  email: string;
+}
+
+// Données des patients (récupérées via l'API)
+const patients = ref<Patient[]>([]);
+
+// Appel à l'API pour récupérer la liste des patients
+onMounted(async () => {
+  try {
+    const apiPatients = (await fetchPatients()) as unknown as ApiPatient[];
+    patients.value = apiPatients.map((p: ApiPatient): Patient => {
+      if (typeof p.id !== 'number') throw new Error('Patient sans id reçu de l’API');
+      return {
+        id: p.id,
+        sexe: p.gender,
+        nom: p.lastName,
+        prenom: p.firstName,
+        dateNaissance: p.birthDate ? p.birthDate.split('T')[0] : '',
+        telephone: p.phone ?? '',
+        email: p.email ?? '',
+      };
+    });
+  } catch (e) {
+    if (e instanceof Error) {
+      errors.value.global = e.message;
+    } else {
+      errors.value.global = 'Erreur inconnue';
+    }
+  }
+});
 
 // Gestion de la modale principale (création, édition, vue)
 const showModal = ref(false);
 const modalMode = ref<'create' | 'edit' | 'view' | null>(null);
-const selectedPatient = ref<any>(null);
+const selectedPatient = ref<Patient | null>(null);
 
 function openCreate() {
   modalMode.value = 'create';
   selectedPatient.value = null;
   showModal.value = true;
 }
-function openEdit(patient: any) {
+function openEdit(patient: Patient) {
   modalMode.value = 'edit';
   selectedPatient.value = { ...patient };
   showModal.value = true;
 }
-function openView(patient: any) {
+function openView(patient: Patient) {
   modalMode.value = 'view';
   selectedPatient.value = { ...patient };
   showModal.value = true;
@@ -251,27 +267,108 @@ function closeModal() {
   showModal.value = false;
 }
 
-function handleSubmit(/* form: any */) {
-  // Ici tu ajoutes ou modifies le patient (mock ou API)
-  closeModal();
+const errors = ref<Record<string, string>>({});
+
+async function handleSubmit(form: Patient) {
+  errors.value = {};
+  try {
+    if (modalMode.value === 'create') {
+      await createPatient({
+        firstName: form.prenom,
+        lastName: form.nom,
+        gender: form.sexe,
+        birthDate: form.dateNaissance,
+        phone: form.telephone,
+        email: form.email,
+      });
+    } else if (modalMode.value === 'edit' && selectedPatient.value) {
+      await updatePatient(selectedPatient.value.id, {
+        firstName: form.prenom,
+        lastName: form.nom,
+        gender: form.sexe,
+        birthDate: form.dateNaissance,
+        phone: form.telephone,
+        email: form.email,
+      });
+    }
+    // Recharge la liste après ajout/modif
+    const apiPatients = (await fetchPatients()) as unknown as ApiPatient[];
+    patients.value = apiPatients.map((p: ApiPatient): Patient => {
+      if (typeof p.id !== 'number') throw new Error('Patient sans id reçu de l’API');
+      return {
+        id: p.id,
+        sexe: p.gender,
+        nom: p.lastName,
+        prenom: p.firstName,
+        dateNaissance: p.birthDate ? p.birthDate.split('T')[0] : '',
+        telephone: p.phone ?? '',
+        email: p.email ?? '',
+      };
+    });
+    closeModal();
+  } catch (e) {
+    if (typeof e === 'object' && e && 'violations' in e) {
+      // Mapping backend -> front
+      errors.value = Object.fromEntries(
+        Object.entries((e as { violations: Record<string, string[]> }).violations).map(([k, v]) => [
+          k === 'firstName'
+            ? 'prenom'
+            : k === 'lastName'
+              ? 'nom'
+              : k === 'gender'
+                ? 'sexe'
+                : k === 'birthDate'
+                  ? 'dateNaissance'
+                  : k === 'phone'
+                    ? 'telephone'
+                    : k,
+          Array.isArray(v) ? v.join(', ') : String(v),
+        ])
+      ) as Record<string, string>;
+    } else if (typeof e === 'object' && e && 'error' in e) {
+      errors.value = { global: (e as { error: string }).error };
+    } else if (e instanceof Error) {
+      errors.value = { global: e.message };
+    } else {
+      errors.value = { global: 'Erreur inconnue' };
+    }
+  }
 }
 
 // Gestion de la suppression
 const showDeleteModal = ref(false);
-const patientToDelete = ref<any>(null);
+const patientToDelete = ref<Patient | null>(null);
 
-function openDelete(patient: any) {
+function openDelete(patient: Patient) {
   patientToDelete.value = patient;
   showDeleteModal.value = true;
 }
 function closeDeleteModal() {
   showDeleteModal.value = false;
 }
-function confirmDelete() {
-  // Suppression du patient (mock)
-  const idx = patients.value.findIndex((p: any) => p.id === patientToDelete.value.id);
-  if (idx !== -1) patients.value.splice(idx, 1);
-  closeDeleteModal();
+async function confirmDelete() {
+  if (!patientToDelete.value) return;
+  try {
+    await deletePatient(patientToDelete.value.id);
+    // Recharge la liste après suppression
+    const apiPatients = (await fetchPatients()) as unknown as ApiPatient[];
+    patients.value = apiPatients.map((p: ApiPatient): Patient => {
+      if (typeof p.id !== 'number') throw new Error('Patient sans id reçu de l’API');
+      return {
+        id: p.id,
+        sexe: p.gender,
+        nom: p.lastName,
+        prenom: p.firstName,
+        dateNaissance: p.birthDate ? p.birthDate.split('T')[0] : '',
+        telephone: p.phone ?? '',
+        email: p.email ?? '',
+      };
+    });
+    closeDeleteModal();
+  } catch (e) {
+    errors.value.global =
+      e instanceof Error ? e.message : 'Erreur lors de la suppression du patient.';
+  }
 }
 </script>
 
