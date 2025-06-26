@@ -23,3 +23,4 @@
 
 # Fichiers de configuration sensibles
 docker/mysql/init.sql
+node_modules
