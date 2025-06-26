@@ -1,6 +1,13 @@
-/*
+/**
  * Tests unitaires du composant PatientCard.vue
- * Vérifie l'affichage des informations patient, des icônes de genre, et des actions par défaut.
+ * --------------------------------------------
+ * - Vérifie l'affichage des informations patient (nom, date, etc.)
+ * - Vérifie l'affichage des icônes de genre selon la donnée
+ * - Vérifie l'affichage des actions par défaut
+ *
+ * Convention :
+ *   - Utilise des props de base typées
+ *   - Couvre les cas d'affichage principaux et les variantes d'icônes
  */
 import { describe, it, expect } from 'vitest';
 import { mount } from '@vue/test-utils';
@@ -17,14 +24,24 @@ describe('PatientCard', () => {
     email: 'marie.dupont@email.com',
   };
 
-  // Vérifie que le nom complet et la date de naissance sont affichés
+  /**
+   * Vérifie que le nom complet et la date de naissance sont affichés correctement
+   */
   it('affiche le nom complet et la date de naissance', () => {
     const wrapper = mount(PatientCard, { props: baseProps });
     expect(wrapper.text()).toContain('Dupont Marie');
-    expect(wrapper.text()).toContain('1985-04-12');
+    // Date attendue au format littéral local (ex: 12 avril 1985)
+    const expectedDate = new Date('1985-04-12').toLocaleDateString(undefined, {
+      year: 'numeric',
+      month: 'long',
+      day: '2-digit',
+    });
+    expect(wrapper.text()).toContain(expectedDate);
   });
 
-  // Vérifie que l'icône de genre appropriée est affichée selon la valeur de gender
+  /**
+   * Vérifie que l'icône de genre appropriée est affichée selon la valeur de gender
+   */
   it('affiche l’icône de genre appropriée', () => {
     const wrapperF = mount(PatientCard, { props: { ...baseProps, gender: 'F' } });
     expect(wrapperF.html()).toContain('female');
@@ -34,7 +51,9 @@ describe('PatientCard', () => {
     expect(wrapperX.html()).toContain('transgender');
   });
 
-  // Vérifie que les actions par défaut sont affichées si aucun slot n'est fourni
+  /**
+   * Vérifie que les actions par défaut sont affichées si aucun slot n'est fourni
+   */
   it('affiche les actions par défaut si aucun slot', () => {
     const wrapper = mount(PatientCard, { props: baseProps });
     expect(wrapper.text()).toContain('Voir');
