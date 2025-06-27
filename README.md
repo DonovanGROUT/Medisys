@@ -112,16 +112,30 @@ Le projet a d'abord consisté à construire un début d'application monolithique
 
 ## 🧪 Tests et Qualité
 
-- **Tests unitaires frontend** : 12 fichiers, 57 tests (CRUD, validation, erreurs, accessibilité)
-- **Tests unitaires backend** : 1 fichier, 8 tests, 11 assertions ✅
-- **Tests fonctionnels (contrôleur)** : 4 fichiers, 4 tests (show, new, edit, delete) ✅
-- **Tests d'intégration (repository)** : 1 fichier, 3 tests (save/retrieve, email uniqueness, audit trail) ✅
+- **Total tests backend** : 52, **assertions** : 140 (affichées par PHPUnit)
+- **Total tests frontend** : 57 (assertions via expect(), non comptabilisées globalement par Vitest)
+
+**Détail des tests :**
+- **Tests unitaires backend** : 1 fichier (regroupé par entité), 10 tests, 20 assertions ✅
+- **Tests fonctionnels backend (contrôleur)** : 4 fichiers, 8 tests (show, new, edit, delete) ✅
+- **Tests d'intégration backend (repository)** : 2 fichiers, 11 tests (save/retrieve, email uniqueness, audit trail, appointment, etc.) ✅
+- **Tests unitaires frontend** : 14 fichiers (un par composant/module), 57 tests (CRUD, validation, erreurs, accessibilité)
 - **Tests d'intégration frontend** : 1 fichier, 8 tests (CRUD, erreurs API, accessibilité)
-- **Total tests backend** : 39, **assertions** : 123
-- **Total tests frontend** : 57
+
+**Qualité et sécurité :**
 - **Couverture PHPDoc** : 100% ✅
-- **Architecture** : Repository Pattern + Entity/Migration + SPA
-- **Sécurité** : Suppression protégée par CSRF, validation stricte, XSS, tests robustes
+- **Architecture** :
+  - Découplage strict frontend/backend (API REST Symfony 7 ↔ SPA Vue 3)
+  - Repository Pattern, Entity/Migration Doctrine
+  - Mapping explicite API ↔ Front
+  - Typage strict généralisé (TypeScript côté front, PHPDoc côté back)
+  - Tests automatisés sur les deux couches
+- **Sécurité** :
+  - Validation systématique des entrées (backend & frontend)
+  - Protection CSRF sur les actions sensibles
+  - Prévention XSS (validation, échappement, tests)
+  - Gestion robuste des erreurs
+  - Authentification et gestion des droits à venir (voir roadmap)
 
 ## 🛠️ Scripts utiles (frontend)
 
