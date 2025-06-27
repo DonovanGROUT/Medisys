@@ -12,10 +12,11 @@
 - **`feature/`** : Nouvelles fonctionnalités (suivant les phases du projet)
   - `feature/patient-entity` (Phase 2 - Entité Patient)
   - `feature/patient-controllers-forms` (Phase 3 - Contrôleurs et formulaires patient)
-  - `feature/patient-vuejs-front` (Phase 4 - Interface Homepage et Patients VueJS)
+  - `feature/patient-vuejs-front` (Phase 4 - Interface Patient et homepage en VueJS)
   - `feature/appointment-entity` (Phase 5 - Entité Rendez-vous)
-  - `feature/appointment-controllers` (Phase 6 - Interface Rendez-vous)
-  - `feature/user-authentication` (Phase 7 - Authentification)
+  - `feature/appointment-controllers` (Phase 6 - API/contrôleurs Rendez-vous)
+  - `feature/appointment-vuejs-front` (Phase 7 - Interface Rendez-vous en VueJS)
+  - `feature/user-authentication` (Phase 8 - Authentification)
 
 ### Branches de support
 
@@ -102,8 +103,9 @@ docs: update README with installation steps
 - `feature/patient-entity` : ✅ **TERMINÉE** - Entité Patient avec Doctrine
 - `feature/patient-controllers-forms` : ✅ **TERMINÉE** - Contrôleurs et formulaires Patient
 - `feature/patient-vuejs-front` : ✅ **TERMINÉE** - Interface Patient et homepage en Vue.js (SPA)
-- `feature/appointment-entity` : 🚧 **EN COURS** - Entité Rendez-vous
-- `feature/appointment-controllers` : 📅 **À VENIR** - Interface Rendez-vous
+- `feature/appointment-entity` : ✅ **TERMINÉE** - Entité Rendez-vous (Doctrine, validation, tests, docs)
+- `feature/appointment-controllers` : 📅 **À VENIR** - API/contrôleurs Rendez-vous
+- `feature/appointment-vuejs-front` : 📅 **À VENIR** - Interface Rendez-vous en Vue.js (SPA)
 - `feature/user-authentication` : 📅 **À VENIR** - Système d'authentification
 
 > Les features suivent la progression des phases documentées

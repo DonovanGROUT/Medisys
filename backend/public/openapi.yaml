@@ -114,6 +114,38 @@ paths:
           description: 'Patient non trouvé'
 components:
   schemas:
+    Appointment:
+      required:
+        - patient
+        - dateTime
+        - duration
+        - reason
+        - status
+      properties:
+        id:
+          description: 'Identifiant unique du rendez-vous'
+          type: integer
+          example: 1
+        patient:
+          $ref: '#/components/schemas/Patient'
+        dateTime:
+          description: 'Date et heure du rendez-vous'
+          type: string
+          format: date-time
+          example: '2025-07-01T09:00:00+00:00'
+        duration:
+          description: 'Durée du rendez-vous en minutes'
+          type: integer
+          example: 30
+        reason:
+          description: 'Motif du rendez-vous'
+          type: string
+          example: 'Consultation annuelle'
+        status:
+          description: 'Statut du rendez-vous (scheduled, cancelled, completed)'
+          type: string
+          example: scheduled
+      type: object
     Patient:
       required:
         - firstName
