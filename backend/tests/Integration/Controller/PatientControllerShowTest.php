@@ -6,12 +6,11 @@ use App\Entity\Patient;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Doctrine\ORM\EntityManagerInterface;
 
+#[\PHPUnit\Framework\Attributes\CoversClass(\App\Controller\PatientController::class)]
 /**
  * Test d'intégration pour l'affichage de la fiche patient (action show).
  *
  * Vérifie que la page détail d'un patient s'affiche correctement avec les bonnes informations.
- *
- * @covers \App\Controller\PatientController::show
  */
 class PatientControllerShowTest extends WebTestCase
 {
