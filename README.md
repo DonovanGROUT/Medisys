@@ -15,7 +15,8 @@
     - [✅ Phase 1 - Installation Symfony (Terminée)](#-phase-1---installation-symfony-terminée)
     - [✅ Phase 2 - Entité Patient (Terminée)](#-phase-2---entité-patient-terminée)
     - [✅ Phase 3 - Contrôleurs et Formulaires (Terminée)](#-phase-3---contrôleurs-et-formulaires-terminée)
-    - [✅ Phase 4 - Migration SPA Vue.js (Terminée)](#-phase-4---migration-spa-vuejs-terminée)
+    - [✅ Phase 4 - Interface Homepage et Patients VueJS (Terminée)](#-phase-4---interface-homepage-et-patients-vuejs-terminée)
+    - [✅ Phase 5 - Entité Rendez-vous (Appointment)](#-phase-5---entité-rendez-vous-appointment)
     - [🚧 Prochaine phase (branche à venir)](#-prochaine-phase-branche-à-venir)
   - [🧪 Tests et Qualité](#-tests-et-qualité)
   - [🛠️ Scripts utiles (frontend)](#️-scripts-utiles-frontend)
@@ -88,7 +89,7 @@ Le projet a d'abord consisté à construire un début d'application monolithique
 - CRUD complet pour Patient (show, new, edit, delete)
 - Tests fonctionnels (show, new, edit, delete)
 
-### ✅ Phase 4 - Migration SPA Vue.js (Terminée)
+### ✅ Phase 4 - Interface Homepage et Patients VueJS (Terminée)
 - Migration vers une architecture découplée : SPA Vue.js côté frontend, API Symfony côté backend
 - Refactoring du code pour séparer clairement les responsabilités front/back
 - Mise en place d’un mapping explicite entre les modèles API (anglais) et front (français)
@@ -97,6 +98,13 @@ Le projet a d'abord consisté à construire un début d'application monolithique
 - Ajout et fiabilisation des tests unitaires et d’intégration (frontend et backend)
 - Accessibilité : tests et améliorations pour la navigation clavier et les lecteurs d’écran
 - Documentation enrichie (guides, glossaire, fiches de révision, conventions)
+
+### ✅ Phase 5 - Entité Rendez-vous (Appointment)
+- Entité Appointment complète avec propriétés et relations
+- Repository AppointmentRepository configuré
+- Migration de base de données appliquée
+- Tests unitaires et d'intégration fonctionnels
+- Documentation PHPDoc complète
 
 ### 🚧 Prochaine phase (branche à venir)
 - Phase 5 : Création de l’entité Rendez-vous (`feature/appointment-entity`)
