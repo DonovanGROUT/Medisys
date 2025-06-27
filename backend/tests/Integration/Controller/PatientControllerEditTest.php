@@ -6,12 +6,11 @@ use App\Entity\Patient;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Doctrine\ORM\EntityManagerInterface;
 
+#[\PHPUnit\Framework\Attributes\CoversClass(\App\Controller\PatientController::class)]
 /**
  * Test d'intégration pour l'édition d'un patient (action edit).
  *
  * Vérifie que le formulaire d'édition fonctionne et que les modifications sont bien enregistrées.
- *
- * @covers \App\Controller\PatientController::edit
  */
 class PatientControllerEditTest extends WebTestCase
 {
