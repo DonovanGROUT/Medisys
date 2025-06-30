@@ -143,6 +143,17 @@ Ce fichier centralise les notes, astuces, problèmes rencontrés et conventions 
 - Difficulté rencontrée : erreurs TypeScript dans les tests résolues par l’ajout de "vitest" dans `tsconfig.json`
 - Prochaine étape : intégration et tests de l’API Symfony avec le frontend Vue.js
 
+## Phase 5 & 6 – Rendez-vous (Appointment)
+
+- **Entité Appointment** : propriétés strictes (date/heure, durée, motif, statut, patient lié), validation métier (date future, durée positive, statut autorisé).
+- **Mapping DTO/Entity** : centralisé dans un service dédié (AppointmentMapper), facilite la maintenance et la cohérence API ↔ base.
+- **Gestion des statuts** : liste fermée de valeurs autorisées ("scheduled", "cancelled", "completed") validée dans le setter, statuts clairs (à venir, confirmé, annulé, terminé), cohérence avec la charte graphique (voir [`GRAPHIC-CHART.md`](../design/GRAPHIC-CHART.md)).
+- **Validation & erreurs** : validation stricte (DTO, entité), gestion centralisée des erreurs métier (retours 400/404 structurés).
+- **Documentation API** : schéma OpenAPI à jour, exemples de payloads/réponses, mapping API ↔ Front documenté (voir [`MAPPING-API-FRONT.md`](../tech/MAPPING-API-FRONT.md)).
+- **Tests** : intégration CRUD, validation, erreurs métier, base de test isolée.
+- **Cohérence Patient/Appointment** : même logique de mapping, validation, gestion des erreurs et documentation.
+- **DTO/Mapper** : voir la fiche de révision [`08-dto-mapper-api.md`](../revision-sheets/08-dto-mapper-api.md) pour les bonnes pratiques et exemples concrets.
+
 ---
 
 ## Vue.js SPA – Architecture, conventions et scripts

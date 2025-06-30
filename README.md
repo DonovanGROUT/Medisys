@@ -17,7 +17,8 @@
     - [✅ Phase 3 - Contrôleurs et Formulaires (Terminée)](#-phase-3---contrôleurs-et-formulaires-terminée)
     - [✅ Phase 4 - Interface Homepage et Patients VueJS (Terminée)](#-phase-4---interface-homepage-et-patients-vuejs-terminée)
     - [✅ Phase 5 - Entité Rendez-vous (Appointment)](#-phase-5---entité-rendez-vous-appointment)
-    - [🚧 Prochaine phase (branche à venir)](#-prochaine-phase-branche-à-venir)
+    - [✅ Phase 6 - Contrôleurs et API Appointment](#-phase-6---contrôleurs-et-api-appointment)
+    - [🚧 Prochaine phase (front Appointment VueJS)](#-prochaine-phase-front-appointment-vuejs)
   - [🧪 Tests et Qualité](#-tests-et-qualité)
   - [🛠️ Scripts utiles (frontend)](#️-scripts-utiles-frontend)
   - [📏 Conventions \& bonnes pratiques](#-conventions--bonnes-pratiques)
@@ -106,20 +107,27 @@ Le projet a d'abord consisté à construire un début d'application monolithique
 - Tests unitaires et d'intégration fonctionnels
 - Documentation PHPDoc complète
 
-### 🚧 Prochaine phase (branche à venir)
-- Phase 5 : Création de l’entité Rendez-vous (`feature/appointment-entity`)
-- Préparation des contrôleurs et de l’interface de gestion des rendez-vous
+### ✅ Phase 6 - Contrôleurs et API Appointment
+- Contrôleur API Appointment complet (CRUD REST)
+- Mapping DTO ↔ entité centralisé, validation stricte
+- Gestion structurée des erreurs (400, 404, validation)
+- Documentation OpenAPI et mapping API/Front à jour
+- Tests d’intégration automatisés pour chaque endpoint
+
+### 🚧 Prochaine phase (front Appointment VueJS)
+- Développement de l’interface Appointment (VueJS) : écrans, appels API, gestion des états, validation côté client
 
 ## 🧪 Tests et Qualité
 
-- **Total tests backend** : 52, **assertions** : 140 (affichées par PHPUnit)
-- **Total tests frontend** : 57 (assertions via expect(), non comptabilisées globalement par Vitest)
+- **Total tests backend** : 69, **assertions** : 206 (affichées par PHPUnit)
+- **Total tests frontend** : 57 (Vitest, assertions via expect())
 
 **Détail des tests :**
-- **Tests unitaires backend** : 1 fichier (regroupé par entité), 10 tests, 20 assertions ✅
-- **Tests fonctionnels backend (contrôleur)** : 4 fichiers, 8 tests (show, new, edit, delete) ✅
-- **Tests d'intégration backend (repository)** : 2 fichiers, 11 tests (save/retrieve, email uniqueness, audit trail, appointment, etc.) ✅
-- **Tests unitaires frontend** : 14 fichiers (un par composant/module), 57 tests (CRUD, validation, erreurs, accessibilité)
+- **Tests unitaires backend** : 2 fichiers (AppointmentTest.php, PatientTest.php), 20 tests, 40 assertions ✅
+- **Tests d'intégration backend (API/contrôleurs)** : 2 fichiers principaux (AppointmentApiControllerTest.php, PatientApiControllerTest.php), 39 tests, 110 assertions ✅
+- **Tests fonctionnels backend (contrôleur Symfony)** : 4 fichiers (show, new, edit, delete), 8 tests, 16 assertions ✅
+- **Tests d'intégration backend (repository)** : 2 fichiers, 11 tests, 40 assertions ✅
+- **Tests unitaires frontend** : 14 fichiers (un par composant/module), 49 tests (CRUD, validation, erreurs, accessibilité)
 - **Tests d'intégration frontend** : 1 fichier, 8 tests (CRUD, erreurs API, accessibilité)
 
 **Qualité et sécurité :**
