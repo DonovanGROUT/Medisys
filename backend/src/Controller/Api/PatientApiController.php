@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Api;
 
 use App\Entity\Patient;
 use App\Repository\PatientRepository;
@@ -12,6 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use OpenApi\Annotations as OA;
+use App\Mapper\PatientMapper;
 
 /**
  * Contrôleur API REST pour la gestion des patients (CRUD).
@@ -34,15 +35,20 @@ use OpenApi\Annotations as OA;
 #[Route('/api/patients', name: 'api_patients_')]
 class PatientApiController extends AbstractController
 {
+    // TODO Sécurité d'accès : ajouter vérification des droits (authentification, rôles, voters) sur chaque endpoint dès que l'authentification sera en place.
+    // Exemple : @IsGranted('ROLE_USER') ou voter personnalisé (ex : un rendez-vous ne peut être modifié que par le praticien du patient ou par l'admin).
+
     private PatientRepository $patientRepository;
     private SerializerInterface $serializer;
     private ValidatorInterface $validator;
+    private PatientMapper $patientMapper;
 
-    public function __construct(PatientRepository $patientRepository, SerializerInterface $serializer, ValidatorInterface $validator)
+    public function __construct(PatientRepository $patientRepository, SerializerInterface $serializer, ValidatorInterface $validator, PatientMapper $patientMapper)
     {
         $this->patientRepository = $patientRepository;
         $this->serializer = $serializer;
         $this->validator = $validator;
+        $this->patientMapper = $patientMapper;
     }
 
     #[Route('', name: 'list', methods: ['GET'])]
@@ -107,7 +113,7 @@ class PatientApiController extends AbstractController
      *     summary="Créer un patient",
      *     @OA\RequestBody(
      *         required=true,
-     *         @OA\JsonContent(ref="#/components/schemas/Patient")
+     *         @OA\JsonContent(ref="#/components/schemas/PatientDTO")
      *     ),
      *     @OA\Response(
      *         response=201,
@@ -123,16 +129,15 @@ class PatientApiController extends AbstractController
     {
         $data = $request->getContent();
         try {
-            $patient = $this->serializer->deserialize($data, Patient::class, 'json');
+            $patientDTO = $this->serializer->deserialize($data, \App\Dto\PatientDTO::class, 'json');
         } catch (\Throwable $e) {
             return $this->json([
                 'error' => 'Erreur de format dans les données envoyées (ex: date invalide, type incorrect).',
                 'details' => $e->getMessage(),
             ], 400);
         }
-        $errors = $this->validator->validate($patient);
+        $errors = $this->validator->validate($patientDTO);
         if (count($errors) > 0) {
-            // Transformation des violations en tableau lisible
             $errorMessages = [];
             foreach ($errors as $error) {
                 $property = $error->getPropertyPath();
@@ -141,6 +146,14 @@ class PatientApiController extends AbstractController
             return $this->json([
                 'error' => 'Données invalides',
                 'violations' => $errorMessages
+            ], 400);
+        }
+        try {
+            $patient = $this->patientMapper->dtoToEntity($patientDTO);
+        } catch (\Throwable $e) {
+            return $this->json([
+                'error' => 'Erreur lors du mapping des données (champ manquant ou invalide)',
+                'details' => $e->getMessage(),
             ], 400);
         }
         try {
@@ -191,34 +204,51 @@ class PatientApiController extends AbstractController
      */
     public function update(Request $request, Patient $patient): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
-        // Vérification stricte des champs obligatoires pour PUT (REST)
-        $requiredFields = ['firstName', 'lastName', 'email', 'birthDate', 'gender'];
-        $missing = array_diff($requiredFields, array_keys($data ?? []));
-        if (count($missing) > 0) {
-            return $this->json([
-                'error' => 'Champs obligatoires manquants pour un PUT complet',
-                'missing' => array_values($missing)
-            ], 400);
-        }
+        $data = $request->getContent();
         try {
-            $this->serializer->deserialize($request->getContent(), Patient::class, 'json', ['object_to_populate' => $patient]);
+            $patientDTO = $this->serializer->deserialize($data, \App\Dto\PatientDTO::class, 'json');
         } catch (\Throwable $e) {
             return $this->json([
                 'error' => 'Erreur de format dans les données envoyées (ex: date invalide, type incorrect).',
                 'details' => $e->getMessage(),
             ], 400);
         }
-        $errors = $this->validator->validate($patient);
+        $errors = $this->validator->validate($patientDTO);
         if (count($errors) > 0) {
             $errorMessages = [];
+            $missingFields = [];
             foreach ($errors as $error) {
                 $property = $error->getPropertyPath();
                 $errorMessages[$property][] = $error->getMessage();
+                if (stripos($error->getMessage(), 'obligatoire') !== false) {
+                    $missingFields[] = $property;
+                }
+            }
+            $errorText = 'Données invalides';
+            if (!empty($missingFields)) {
+                $errorText = 'Champ obligatoire manquant : ' . implode(', ', $missingFields);
             }
             return $this->json([
-                'error' => 'Données invalides',
+                'error' => $errorText,
                 'violations' => $errorMessages
+            ], 400);
+        }
+        try {
+            $this->patientMapper->dtoToEntity($patientDTO, $patient);
+        } catch (\Throwable $e) {
+            $msg = $e->getMessage();
+            if (preg_match('/must not be accessed before initialization/', $msg, $m)) {
+                if (preg_match('/\\\
+PatientDTO::\$(\w+)/', $msg, $propMatch)) {
+                    $field = $propMatch[1];
+                    $msg = "Le champ $field est obligatoire.";
+                } else {
+                    $msg = "Champ obligatoire manquant.";
+                }
+            }
+            return $this->json([
+                'error' => 'Erreur lors du mapping des données (champ manquant ou invalide)',
+                'details' => $msg,
             ], 400);
         }
         try {
@@ -300,59 +330,55 @@ class PatientApiController extends AbstractController
      */
     public function patch(Request $request, Patient $patient): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
-        if (!$data) {
-            return $this->json(['error' => 'Données invalides'], 400);
-        }
-        // Liste blanche des champs autorisés pour PATCH
-        $allowedFields = ['firstName', 'lastName', 'email', 'phone', 'birthDate', 'gender', 'medicalHistory'];
-        $unknownFields = array_diff(array_keys($data), $allowedFields);
-        if (count($unknownFields) > 0) {
+        $data = $request->getContent();
+        $dataArray = json_decode($data, true);
+        // Vérification des champs inconnus
+        $allowedFields = ['firstName', 'lastName', 'email', 'birthDate', 'gender', 'phone', 'medicalHistory'];
+        $unknownFields = array_diff(array_keys($dataArray), $allowedFields);
+        if (!empty($unknownFields)) {
             return $this->json([
                 'error' => 'Champs inconnus dans la requête',
-                'fields' => array_values($unknownFields)
+                'violations' => array_values($unknownFields)
             ], 400);
         }
         try {
-            foreach ($data as $field => $value) {
-                if (property_exists($patient, $field)) {
-                    $setter = 'set' . ucfirst($field);
-                    if (method_exists($patient, $setter)) {
-                        // Conversion spécifique pour birthDate
-                        if ($field === 'birthDate' && is_string($value)) {
-                            $value = \DateTimeImmutable::createFromFormat('Y-m-d', $value) ?: new \DateTimeImmutable($value);
-                        }
-                        $patient->$setter($value);
-                    }
-                }
-            }
+            $patientDTO = $this->serializer->deserialize($data, \App\Dto\PatientDTO::class, 'json');
         } catch (\Throwable $e) {
-            // Gestion spécifique pour les erreurs métier du setter (ex: genre invalide)
-            if ($e instanceof \InvalidArgumentException) {
-                return $this->json([
-                    'error' => 'Données invalides',
-                    'violations' => [
-                        'gender' => [$e->getMessage()]
-                    ]
-                ], 400);
-            }
             return $this->json([
                 'error' => 'Erreur de format dans les données envoyées (ex: date invalide, type incorrect).',
                 'details' => $e->getMessage(),
             ], 400);
         }
-        $errors = $this->validator->validate($patient);
+        // Validation partielle : on ne valide que les champs présents dans la requête
+        $groups = [];
+        foreach ($dataArray as $field => $value) {
+            $groups[] = $field;
+        }
+        $errors = $this->validator->validate($patientDTO);
         if (count($errors) > 0) {
             $errorMessages = [];
             foreach ($errors as $error) {
                 $property = $error->getPropertyPath();
-                $errorMessages[$property][] = $error->getMessage();
+                // On ne remonte que les erreurs sur les champs présents dans la requête
+                if (array_key_exists($property, $dataArray)) {
+                    $errorMessages[$property][] = $error->getMessage();
+                }
             }
-            return $this->json([
-                'error' => 'Données invalides',
-                'violations' => $errorMessages
-            ], 400);
+            if (!empty($errorMessages)) {
+                return $this->json([
+                    'error' => 'Données invalides',
+                    'violations' => $errorMessages
+                ], 400);
+            }
         }
+        // Mapping conditionnel DTO -> entité (seulement les champs présents)
+        if (isset($dataArray['firstName'])) $patient->setFirstName($patientDTO->firstName);
+        if (isset($dataArray['lastName'])) $patient->setLastName($patientDTO->lastName);
+        if (isset($dataArray['email'])) $patient->setEmail($patientDTO->email);
+        if (isset($dataArray['birthDate'])) $patient->setBirthDate(new \DateTimeImmutable($patientDTO->birthDate));
+        if (isset($dataArray['gender'])) $patient->setGender($patientDTO->gender);
+        if (array_key_exists('phone', $dataArray)) $patient->setPhone($patientDTO->phone);
+        if (array_key_exists('medicalHistory', $dataArray)) $patient->setMedicalHistory($patientDTO->medicalHistory);
         try {
             $this->patientRepository->add($patient, true);
         } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException | \Doctrine\DBAL\Exception\NotNullConstraintViolationException $e) {
