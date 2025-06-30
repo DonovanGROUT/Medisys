@@ -16,6 +16,8 @@ Ce document compile les concepts rencontrés lors du développement d'applicatio
 
 **Accessibilité numérique** : Obligation légale et éthique de rendre les applications utilisables par tous, y compris les personnes en situation de handicap. Respect des référentiels (RGAA, WCAG), contrastes, navigation clavier, alternatives textuelles, etc. Particulièrement critique dans le secteur médical pour garantir l’accès aux soins et à l’information.
 
+**Rendez-vous médical (Appointment)** : Acte planifié entre un patient et un professionnel de santé, consigné dans le dossier médical. Le rendez-vous médical implique des enjeux forts de confidentialité, de traçabilité (horodatage, auteur, statut), et de gestion des droits d’accès. Il est indissociable du patient, et sa gestion doit garantir l’intégrité des données, la conformité réglementaire (RGPD), et la sécurité des échanges (notamment en cas de télémédecine ou de partage interprofessionnel).
+
 ## 📋 Standards et Normes
 
 **HL7** : Health Level 7, famille de standards internationaux pour l'échange de données de santé entre systèmes informatiques.
