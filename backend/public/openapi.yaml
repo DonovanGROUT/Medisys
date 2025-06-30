@@ -4,24 +4,131 @@ info:
   description: 'API REST pour la gestion des patients (Symfony 7)'
   version: 1.0.0
 paths:
+  /api/appointments:
+    get:
+      summary: 'Liste des rendez-vous'
+      description: "Liste tous les rendez-vous.\nGET /api/appointments"
+      operationId: 704fc97d8c39c6483287da7e510146a8
+      responses:
+        '200':
+          description: 'Liste des rendez-vous'
+    post:
+      summary: 'Créer un rendez-vous'
+      description: "Crée un nouveau rendez-vous.\nPOST /api/appointments"
+      operationId: c5a37abc97483c3b5c8c8dba4725f52f
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppointmentDTO'
+      responses:
+        '201':
+          description: 'Rendez-vous créé'
+        '400':
+          description: 'Données invalides'
+  '/api/appointments/{id}':
+    get:
+      summary: "Détail d'un rendez-vous"
+      description: "Détail d'un rendez-vous par son identifiant.\nGET /api/appointments/{id}"
+      operationId: b6698d534040fb1c8aaee264f74588e5
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'ID du rendez-vous'
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 'Détail du rendez-vous'
+        '404':
+          description: 'Rendez-vous non trouvé'
+    put:
+      summary: 'Met à jour un rendez-vous'
+      description: "Met à jour un rendez-vous existant.\nPUT/PATCH /api/appointments/{id}"
+      operationId: ddcef12e855de415891d6c29cf863a6e
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'ID du rendez-vous'
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppointmentDTO'
+      responses:
+        '200':
+          description: 'Rendez-vous mis à jour'
+        '400':
+          description: 'Données invalides'
+        '404':
+          description: 'Rendez-vous non trouvé'
+    delete:
+      summary: 'Supprime un rendez-vous'
+      description: "Supprime un rendez-vous existant.\nDELETE /api/appointments/{id}"
+      operationId: 79e3a8e6cfad4ea0db4c94ea4ab3ef7d
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'ID du rendez-vous'
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: 'Rendez-vous supprimé'
+        '404':
+          description: 'Rendez-vous non trouvé'
+    patch:
+      summary: 'Met à jour partiellement un rendez-vous'
+      operationId: 97fee60cc54908cea616d3679d4e0ea8
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'ID du rendez-vous'
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppointmentDTO'
+      responses:
+        '200':
+          description: 'Rendez-vous mis à jour'
+        '400':
+          description: 'Données invalides'
+        '404':
+          description: 'Rendez-vous non trouvé'
   /api/patients:
     get:
       summary: 'Liste des patients'
       description: "Liste tous les patients.\nGET /api/patients"
-      operationId: 921353045b66dfd1c79edcbec7419528
+      operationId: ebe1c9e7efb26bf3bc02eb66840954e4
       responses:
         '200':
           description: 'Liste des patients'
     post:
       summary: 'Créer un patient'
       description: "Crée un nouveau patient.\nPOST /api/patients"
-      operationId: a0406d1be49fb33909bda966cac41828
+      operationId: 599dddbf84943d6601d6f6b3f39686a5
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Patient'
+              $ref: '#/components/schemas/PatientDTO'
       responses:
         '201':
           description: 'Patient créé'
@@ -31,7 +138,7 @@ paths:
     get:
       summary: "Détail d'un patient"
       description: "Détail d'un patient par son identifiant.\nGET /api/patients/{id}"
-      operationId: e829254e2a9413d4b7e911b1f5ca22db
+      operationId: 8d7f325cbd3ab2806846b473889c3ee8
       parameters:
         -
           name: id
@@ -48,7 +155,7 @@ paths:
     put:
       summary: 'Mettre à jour un patient'
       description: "Met à jour totalement un patient (remplacement complet).\nPUT /api/patients/{id}\nÀ utiliser pour remplacer toutes les données d'un patient."
-      operationId: 98d4596ee582c4cc4c17d591b3fe66f4
+      operationId: 45760e843a1bbaed59793715f7959f5f
       parameters:
         -
           name: id
@@ -73,7 +180,7 @@ paths:
     delete:
       summary: 'Supprimer un patient'
       description: "Supprime un patient.\nDELETE /api/patients/{id}"
-      operationId: 48f6ac3a000288068d1c77a7ed4b9056
+      operationId: 3f7e344041da0215bba5e4fe2dbdf333
       parameters:
         -
           name: id
@@ -90,7 +197,7 @@ paths:
     patch:
       summary: 'Modifier partiellement un patient'
       description: "Modifie partiellement un patient (modification recommandée).\nPATCH /api/patients/{id}\nPrivilégier cette méthode pour la modification côté front."
-      operationId: 48b29437eb83cf12e1bf76824ef2aac4
+      operationId: d10492dd22a30884ca79b8a9de9d9527
       parameters:
         -
           name: id
@@ -114,6 +221,80 @@ paths:
           description: 'Patient non trouvé'
 components:
   schemas:
+    AppointmentDTO:
+      required:
+        - patientId
+        - dateTime
+        - duration
+        - reason
+        - status
+      properties:
+        patientId:
+          description: 'ID du patient associé au rendez-vous'
+          type: integer
+          example: 1
+        dateTime:
+          description: 'Date et heure du rendez-vous'
+          type: string
+          format: date-time
+          example: '2025-07-01T09:00:00+00:00'
+        duration:
+          description: 'Durée du rendez-vous en minutes'
+          type: integer
+          example: 30
+        reason:
+          description: 'Motif du rendez-vous'
+          type: string
+          example: 'Consultation annuelle'
+        status:
+          description: 'Statut du rendez-vous (scheduled, cancelled, completed)'
+          type: string
+          example: scheduled
+      type: object
+    PatientDTO:
+      required:
+        - firstName
+        - lastName
+        - email
+        - birthDate
+        - gender
+      properties:
+        firstName:
+          description: "DTO pour la création et la modification d'un patient (POST/PUT/PATCH)"
+          type: string
+          maxLength: 255
+          example: Jean
+        lastName:
+          type: string
+          maxLength: 255
+          example: Dupont
+        email:
+          type: string
+          format: email
+          maxLength: 255
+          example: jean.dupont@email.com
+        birthDate:
+          type: string
+          format: date
+          example: '1990-01-01'
+        gender:
+          type: string
+          enum:
+            - M
+            - F
+            - X
+          example: M
+        phone:
+          type: string
+          maxLength: 20
+          example: '+33612345678'
+          nullable: true
+        medicalHistory:
+          type: string
+          maxLength: 1000
+          example: 'Aucun antécédent connu'
+          nullable: true
+      type: object
     Appointment:
       required:
         - patient
