@@ -56,4 +56,34 @@ class AppointmentRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    /**
+     * Ajoute un rendez-vous
+     *
+     * @param Appointment $appointment
+     * @param bool $flush
+     */
+    public function add(Appointment $appointment, bool $flush = false): void
+    {
+        $em = $this->getEntityManager();
+        $em->persist($appointment);
+        if ($flush) {
+            $em->flush();
+        }
+    }
+
+    /**
+     * Supprime un rendez-vous
+     *
+     * @param Appointment $appointment
+     * @param bool $flush
+     */
+    public function remove(Appointment $appointment, bool $flush = false): void
+    {
+        $em = $this->getEntityManager();
+        $em->remove($appointment);
+        if ($flush) {
+            $em->flush();
+        }
+    }
 }
