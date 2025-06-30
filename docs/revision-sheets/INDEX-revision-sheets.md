@@ -20,6 +20,12 @@ Tests, architecture MVC, patterns, APIs, DateTime. Concepts avancés pour créer
 ### [03 - Symfony Bases](./03-symfony-bases.md)
 Installation, Doctrine, entités, tests, Docker. Installation Symfony 7, configuration base de données MySQL avec Docker, création d'entités avec Doctrine, tests PHPUnit et structure projet complète.
 
+### [07 - Tests backend avec PHPUnit](./07-tests-backend-phpunit.md)
+Tests unitaires, fonctionnels et d’intégration du backend Symfony : organisation, bonnes pratiques, exécution, couverture, ressources.
+
+### [08 - DTO, Mapper & structuration API Symfony](./08-dto-mapper-api.md)
+Définition et usage des DTO (Data Transfer Object), principe du mapping DTO ↔ entité, structuration moderne des contrôleurs API Symfony : validation, centralisation des erreurs, bonnes pratiques et exemples.
+
 ## 🚀 Frontend & Vue.js
 
 ### [04 - Migration monolithe → SPA](./04-migration-spa.md)

@@ -15,8 +15,10 @@
     - [✅ Phase 1 - Installation Symfony (Terminée)](#-phase-1---installation-symfony-terminée)
     - [✅ Phase 2 - Entité Patient (Terminée)](#-phase-2---entité-patient-terminée)
     - [✅ Phase 3 - Contrôleurs et Formulaires (Terminée)](#-phase-3---contrôleurs-et-formulaires-terminée)
-    - [✅ Phase 4 - Migration SPA Vue.js (Terminée)](#-phase-4---migration-spa-vuejs-terminée)
-    - [🚧 Prochaine phase (branche à venir)](#-prochaine-phase-branche-à-venir)
+    - [✅ Phase 4 - Interface Homepage et Patients VueJS (Terminée)](#-phase-4---interface-homepage-et-patients-vuejs-terminée)
+    - [✅ Phase 5 - Entité Rendez-vous (Appointment)](#-phase-5---entité-rendez-vous-appointment)
+    - [✅ Phase 6 - Contrôleurs et API Appointment](#-phase-6---contrôleurs-et-api-appointment)
+    - [🚧 Prochaine phase (front Appointment VueJS)](#-prochaine-phase-front-appointment-vuejs)
   - [🧪 Tests et Qualité](#-tests-et-qualité)
   - [🛠️ Scripts utiles (frontend)](#️-scripts-utiles-frontend)
   - [📏 Conventions \& bonnes pratiques](#-conventions--bonnes-pratiques)
@@ -88,7 +90,7 @@ Le projet a d'abord consisté à construire un début d'application monolithique
 - CRUD complet pour Patient (show, new, edit, delete)
 - Tests fonctionnels (show, new, edit, delete)
 
-### ✅ Phase 4 - Migration SPA Vue.js (Terminée)
+### ✅ Phase 4 - Interface Homepage et Patients VueJS (Terminée)
 - Migration vers une architecture découplée : SPA Vue.js côté frontend, API Symfony côté backend
 - Refactoring du code pour séparer clairement les responsabilités front/back
 - Mise en place d’un mapping explicite entre les modèles API (anglais) et front (français)
@@ -98,22 +100,50 @@ Le projet a d'abord consisté à construire un début d'application monolithique
 - Accessibilité : tests et améliorations pour la navigation clavier et les lecteurs d’écran
 - Documentation enrichie (guides, glossaire, fiches de révision, conventions)
 
-### 🚧 Prochaine phase (branche à venir)
-- Phase 5 : Création de l’entité Rendez-vous (`feature/appointment-entity`)
-- Préparation des contrôleurs et de l’interface de gestion des rendez-vous
+### ✅ Phase 5 - Entité Rendez-vous (Appointment)
+- Entité Appointment complète avec propriétés et relations
+- Repository AppointmentRepository configuré
+- Migration de base de données appliquée
+- Tests unitaires et d'intégration fonctionnels
+- Documentation PHPDoc complète
+
+### ✅ Phase 6 - Contrôleurs et API Appointment
+- Contrôleur API Appointment complet (CRUD REST)
+- Mapping DTO ↔ entité centralisé, validation stricte
+- Gestion structurée des erreurs (400, 404, validation)
+- Documentation OpenAPI et mapping API/Front à jour
+- Tests d’intégration automatisés pour chaque endpoint
+
+### 🚧 Prochaine phase (front Appointment VueJS)
+- Développement de l’interface Appointment (VueJS) : écrans, appels API, gestion des états, validation côté client
 
 ## 🧪 Tests et Qualité
 
-- **Tests unitaires frontend** : 12 fichiers, 57 tests (CRUD, validation, erreurs, accessibilité)
-- **Tests unitaires backend** : 1 fichier, 8 tests, 11 assertions ✅
-- **Tests fonctionnels (contrôleur)** : 4 fichiers, 4 tests (show, new, edit, delete) ✅
-- **Tests d'intégration (repository)** : 1 fichier, 3 tests (save/retrieve, email uniqueness, audit trail) ✅
+- **Total tests backend** : 69, **assertions** : 206 (affichées par PHPUnit)
+- **Total tests frontend** : 57 (Vitest, assertions via expect())
+
+**Détail des tests :**
+- **Tests unitaires backend** : 2 fichiers (AppointmentTest.php, PatientTest.php), 20 tests, 40 assertions ✅
+- **Tests d'intégration backend (API/contrôleurs)** : 2 fichiers principaux (AppointmentApiControllerTest.php, PatientApiControllerTest.php), 39 tests, 110 assertions ✅
+- **Tests fonctionnels backend (contrôleur Symfony)** : 4 fichiers (show, new, edit, delete), 8 tests, 16 assertions ✅
+- **Tests d'intégration backend (repository)** : 2 fichiers, 11 tests, 40 assertions ✅
+- **Tests unitaires frontend** : 14 fichiers (un par composant/module), 49 tests (CRUD, validation, erreurs, accessibilité)
 - **Tests d'intégration frontend** : 1 fichier, 8 tests (CRUD, erreurs API, accessibilité)
-- **Total tests backend** : 39, **assertions** : 123
-- **Total tests frontend** : 57
+
+**Qualité et sécurité :**
 - **Couverture PHPDoc** : 100% ✅
-- **Architecture** : Repository Pattern + Entity/Migration + SPA
-- **Sécurité** : Suppression protégée par CSRF, validation stricte, XSS, tests robustes
+- **Architecture** :
+  - Découplage strict frontend/backend (API REST Symfony 7 ↔ SPA Vue 3)
+  - Repository Pattern, Entity/Migration Doctrine
+  - Mapping explicite API ↔ Front
+  - Typage strict généralisé (TypeScript côté front, PHPDoc côté back)
+  - Tests automatisés sur les deux couches
+- **Sécurité** :
+  - Validation systématique des entrées (backend & frontend)
+  - Protection CSRF sur les actions sensibles
+  - Prévention XSS (validation, échappement, tests)
+  - Gestion robuste des erreurs
+  - Authentification et gestion des droits à venir (voir roadmap)
 
 ## 🛠️ Scripts utiles (frontend)
 

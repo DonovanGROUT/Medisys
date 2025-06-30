@@ -1,5 +1,19 @@
 {
     "scripts": {
-        "openapi:generate": "vendor/bin/openapi --format yaml -o public/openapi.yaml src/"
+        "openapi:generate": "vendor/bin/openapi --format yaml -o public/openapi.yaml src/",
+        "create": "php bin/console doctrine:database:create",
+        "drop": "php bin/console doctrine:database:drop --force --if-exists",
+        "migrate": "php bin/console doctrine:migrations:migrate --no-interaction",
+        "fixtures": "php bin/console doctrine:fixtures:load --no-interaction",
+        "create:test": "php bin/console doctrine:database:create --env=test",
+        "drop:test": "php bin/console doctrine:database:drop --env=test --force --if-exists",
+        "migrate:test": "php bin/console doctrine:migrations:migrate --env=test --no-interaction",
+        "fixtures:test": "php bin/console doctrine:fixtures:load --env=test --no-interaction",
+        "reset": "npm run drop && npm run create && npm run migrate && npm run fixtures",
+        "reset:test": "npm run drop:test && npm run create:test && npm run migrate:test && npm run fixtures:test",
+        "reset:full": "npm run reset && npm run reset:test",
+        "test": "php bin/phpunit --testdox",
+        "test:full": "npm run reset:test && npm test",
+        "serve": "php -S 127.0.0.1:8000 -t public"
     }
 }

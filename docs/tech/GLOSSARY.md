@@ -196,4 +196,34 @@ Glossaire des termes et concepts découverts pendant l'apprentissage du dévelop
 
 **jsdom** : Librairie qui simule un environnement DOM dans Node.js, permettant de tester des composants frontend sans navigateur réel.
 
+## Concepts transversaux et outils du projet Medisys
+
+**DTO (Data Transfer Object)** : Objet servant à transporter des données entre les couches de l’application (ex : entre l’API et le frontend). Permet de structurer les échanges, de valider et de documenter précisément les champs exposés.
+
+**Mapper** : Service ou fonction qui convertit un DTO en entité (ou inversement). Centralise la logique de transformation et garantit la cohérence des échanges API/base.
+
+**Payload** : Données envoyées dans le corps d’une requête HTTP (POST/PUT/PATCH), souvent au format JSON.
+
+**OpenAPI** : Spécification standardisée pour décrire, documenter et tester les APIs REST. Utilisée pour générer la documentation interactive de l’API backend.
+
+**Statut (Appointment)** : Champ de l’entité Rendez-vous, valeur autorisée parmi une liste fermée ("scheduled", "cancelled", "completed"). Validé dans le setter, utilisé pour l’affichage (badges, couleurs).
+
+**Mapping API ↔ Front** : Correspondance stricte entre les champs exposés par l’API Symfony et ceux attendus/utilisés côté frontend Vue.js. Documenté dans le fichier `MAPPING-API-FRONT.md`.
+
+**Badge (UI)** : Élément visuel (souvent coloré et arrondi) affichant un statut ou une information clé (ex : statut d’un rendez-vous). Voir la charte graphique pour les conventions de couleur et d’accessibilité.
+
+**Tailwind CSS** : Framework CSS utilitaire utilisé côté frontend pour garantir la cohérence visuelle, l’accessibilité et la rapidité de développement.
+
+**Pinia** : Store manager (gestionnaire d’état) moderne pour Vue.js 3, utilisé pour centraliser les données de l’application frontend.
+
+**Vite** : Outil de build et serveur de développement rapide pour projets frontend modernes (Vue.js, TypeScript).
+
+**Prettier** : Outil de formatage automatique du code (JS/TS/Vue), utilisé pour garantir la cohérence du style dans tout le projet.
+
+**Validation par liste fermée** : Technique consistant à n’accepter qu’un ensemble précis de valeurs pour un champ (ex : statut Appointment), sans utiliser d’enum PHP natif.
+
+**Centralisation des erreurs** : Pattern où toutes les erreurs de validation ou métier sont collectées et renvoyées dans une structure unique (ex : retour 400 avec liste des violations), pour faciliter le traitement côté frontend.
+
+**Reset base de test** : Procédure ou script permettant de réinitialiser complètement la base de test (drop, create, migrate, fixtures) avant d’exécuter les tests automatisés.
+
 > Glossaire enrichi au fur et à mesure des découvertes
