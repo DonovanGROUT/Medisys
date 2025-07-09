@@ -16,7 +16,7 @@ export interface ApiError {
  * @returns {Promise<T | true>} Données typées ou true (pour DELETE/204)
  * @throws {ApiError} en cas d'erreur API ou réseau
  */
-export async function handleApiResponse<T = any>(
+export async function handleApiResponse<T = unknown>(
   response: Response,
   defaultError: string
 ): Promise<T | true> {
@@ -39,10 +39,18 @@ export async function handleApiResponse<T = any>(
 
 /**
  * Formate toute erreur reçue ou levée en ApiError standardisé.
- * @param {any} e - Erreur d'origine (objet, string, etc.)
+ * @param {unknown} e - Erreur d'origine (objet, string, etc.)
  * @param {string} [fallback='Erreur réseau'] - Message par défaut si l'erreur n'est pas exploitable
  * @returns {ApiError} Erreur formatée pour affichage ou propagation
  */
-export function formatError(e: any, fallback = 'Erreur réseau'): ApiError {
-  return { error: e?.error || fallback };
+export function formatError(e: unknown, fallback = 'Erreur réseau'): ApiError {
+  return {
+    error:
+      e &&
+      typeof e === 'object' &&
+      'error' in e &&
+      typeof (e as { error?: unknown }).error === 'string'
+        ? (e as { error: string }).error
+        : fallback,
+  };
 }

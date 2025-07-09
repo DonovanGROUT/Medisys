@@ -12,12 +12,14 @@ import PatientsList from './views/PatientsList.vue';
 import PatientForm from './components/PatientForm.vue';
 import LegalNotice from './views/LegalNotice.vue';
 import PatientShow from './views/PatientShow.vue';
+import AppointmentList from './views/AppointmentList.vue';
 
 const routes = [
   { path: '/', name: 'Home', component: HomePage },
   { path: '/patients', name: 'Patients', component: PatientsList },
   { path: '/patients/new', name: 'PatientNew', component: PatientForm },
   { path: '/patients/:id', name: 'PatientShow', component: PatientShow },
+  { path: '/appointments', name: 'Appointments', component: AppointmentList },
   { path: '/mentions-legales', name: 'LegalNotice', component: LegalNotice },
 ];
 
