@@ -10,4 +10,5 @@ Ce dossier regroupe tous les guides projet, historiques, stratégies et phases d
 - [Phase 4 – Interface Homepage et Patients VueJS](PHASE-4-PATIENT-VUEJS-FRONT.md)
 - [Phase 5 – Entité Rendez-vous (Appointment)](PHASE-5-APPOINTMENT-ENTITY.md)
 - [Phase 6 – API/Contrôleurs Rendez-vous](PHASE-6-APPOINTMENT-CONTROLLERS.md)
+- [Phase 7 – Appointment VueJS (Frontend)](PHASE-7-APPOINTMENT-VUEJS.md)
 - [Notes d’apprentissage](LEARNING-NOTES.md)

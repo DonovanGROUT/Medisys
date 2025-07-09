@@ -1,5 +1,9 @@
 # Mapping API ↔ Frontend (Patient)
 
+> **Convention** : Tous les champs du frontend sont en français (ex : `sexe`, `nom`, `prenom`, `dateNaissance`, `telephone`). La conversion avec l’API (anglais) est assurée dans les services (`patientService.ts`).
+> 
+> **Rappel** : Ne jamais utiliser directement les noms de champs API (anglais) dans les composants ou les tests front. Toujours passer par le mapping centralisé.
+
 Ce document présente la correspondance entre les champs exposés par l’API Symfony (en anglais) et ceux utilisés côté frontend Vue.js (en français) pour la ressource Patient.
 
 | API (anglais)   | Frontend (français) |

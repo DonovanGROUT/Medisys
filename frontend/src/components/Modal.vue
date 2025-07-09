@@ -28,12 +28,10 @@
   -----------------------------------------------------------------------------
 -->
 <template>
-  <!-- Modale générique avec overlay -->
+  <!-- Modale générique avec overlay et accessibilité avancée -->
   <transition name="fade">
-    <div v-if="modelValue" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-      <div
-        class="bg-white rounded-[10px] shadow-xl max-w-lg w-full mx-4 p-0 relative animate-fade-in"
-      >
+    <BaseModal v-if="modelValue" :aria-label="'Modale'" @close="$emit('update:modelValue', false)">
+      <div v-if="!bare">
         <!-- Header de la modale -->
         <div
           class="flex items-center justify-between px-6 py-4 border-b border-[#E0E0E0] rounded-t-[10px] bg-[#F5F5F5]"
@@ -57,22 +55,19 @@
           <slot />
         </div>
       </div>
-    </div>
+      <div v-else>
+        <slot />
+      </div>
+    </BaseModal>
   </transition>
 </template>
 
 <script setup lang="ts">
-// -----------------------------------------------------------------------------
-// Import du composant d’icône de base (Material Icons SVG)
-// -----------------------------------------------------------------------------
+import BaseModal from './BaseModal.vue';
 import BaseIcon from './BaseIcon.vue';
-
-/**
- * Props du composant Modal
- * @prop {boolean} modelValue - Contrôle l’ouverture/fermeture de la modale (v-model)
- */
-defineProps<{ modelValue: boolean }>();
+const props = defineProps<{ modelValue: boolean; bare?: boolean }>();
 defineEmits(['update:modelValue']);
+const bare = props.bare ?? false;
 </script>
 
 <style scoped>

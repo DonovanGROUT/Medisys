@@ -1,319 +1,370 @@
+/**
+ * -------------------------------------------------
+ * Sommaire des blocs de tests :
+ * - Affichage des patients (succès, erreur API)
+ * - Création de patients (succès, erreurs validation)
+ * - Modification de patients (succès)
+ * - Suppression de patients (succès, erreur API, retour false)
+ * - Gestion d'erreur (API, validation, exceptions)
+ * - Robustesse (valeurs inattendues, cas limites)
+ * - Accessibilité (navigation clavier)
+ * Helpers/mocks centralisés en haut de fichier.
+ * -------------------------------------------------
+ */
+
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { mount, flushPromises } from '@vue/test-utils';
+import { mount, flushPromises, VueWrapper } from '@vue/test-utils';
 import PatientsList from '../PatientsList.vue';
 import * as patientService from '../../services/patientService';
-import type { ApiPatient, Patient } from '../../services/patientService';
+import type { Patient } from '../../services/patientService';
 
-// Mock du service patientService
 vi.mock('../../services/patientService');
 
-// On prépare les mocks au format API (anglais)
-const mockPatientsApi: ApiPatient[] = [
+// Stub global BaseIcon pour supprimer les warnings de test
+const globalStubs = { stubs: { BaseIcon: true } };
+
+// Helper DRY pour factoriser la création du wrapper avec stubs par défaut
+type MountPatientsListOptions = {
+  attachTo?: string | Element;
+  [key: string]: unknown;
+};
+
+function mountPatientsList(options: MountPatientsListOptions = {}) {
+  const { attachTo, ...customStubs } = options;
+  return mount(PatientsList, {
+    ...(attachTo ? { attachTo } : {}),
+    global: { stubs: { BaseIcon: true, ...customStubs } },
+  });
+}
+
+type PatientsListInstance = InstanceType<typeof PatientsList> & {
+  patients: Patient[];
+  loading: boolean;
+  error: string | null;
+  showModal: boolean;
+  modalMode: 'create' | 'edit' | null;
+  selectedPatient: Patient | null;
+  showDeleteModal: boolean;
+  patientToDelete: Patient | null;
+  openCreateModal: () => void;
+  openEditModal: (patient: Patient) => void;
+  openDeleteModal: (patient: Patient) => void;
+  closeModal: () => void;
+  closeDeleteModal: () => void;
+  confirmDelete: () => Promise<void>;
+  handleFormSubmit: (patient: Patient) => Promise<void>;
+  fetchPatients: () => Promise<void>;
+};
+
+const mockPatients: Patient[] = [
   {
     id: 1,
-    gender: 'M',
-    lastName: 'Test',
-    firstName: 'T',
-    birthDate: '2000-01-01',
-    phone: '',
+    nom: 'Test',
+    prenom: 'T',
+    sexe: 'M',
+    dateNaissance: '2000-01-01',
+    telephone: '',
     email: 'test@ex.com',
   },
   {
     id: 2,
-    gender: 'F',
-    lastName: 'Demo',
-    firstName: 'D',
-    birthDate: '1995-05-05',
-    phone: '',
+    nom: 'Demo',
+    prenom: 'D',
+    sexe: 'F',
+    dateNaissance: '1995-05-05',
+    telephone: '',
     email: 'demo@ex.com',
   },
 ];
 
-/**
- * Test d'intégration de la vue PatientsList.vue
- * - Vérifie l'affichage de la liste des patients (mock API)
- * - Vérifie la gestion d'une erreur API
- */
-describe('PatientsList.vue (intégration)', () => {
+// Helper pour attendre les mises à jour asynchrones
+function waitForUpdates(): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, 10));
+}
+
+// Helper pour simuler une attente de fermeture de modale
+async function waitForModalClose(
+  wrapper: VueWrapper<InstanceType<typeof PatientsList>>,
+  maxTries = 10
+) {
+  let tries = 0;
+  while (wrapper.text().includes('Ajouter un patient') && tries < maxTries) {
+    await flushPromises();
+    tries++;
+  }
+}
+
+// Helper pour simuler une attente d'apparition de contenu
+async function waitForContent(
+  wrapper: VueWrapper<InstanceType<typeof PatientsList>>,
+  content: string,
+  maxTries = 10
+) {
+  let tries = 0;
+  while (!wrapper.text().toLowerCase().includes(content.toLowerCase()) && tries < maxTries) {
+    await flushPromises();
+    tries++;
+  }
+}
+
+describe("PatientsList - Tests d'intégration", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  /**
-   * Vérifie que la liste des patients est affichée correctement lorsque l'API retourne des données.
-   */
-  it('affiche la liste des patients (succès)', async () => {
-    vi.spyOn(patientService, 'fetchPatients').mockResolvedValue(
-      mockPatientsApi as unknown as Patient[]
-    );
-    const wrapper = mount(PatientsList);
-    await flushPromises();
-    // On vérifie que les patients sont bien affichés (au moins 2 lignes)
-    expect(wrapper.text()).toContain('Test T');
-    expect(wrapper.text()).toContain('Demo D');
-    expect(wrapper.findAll('[data-testid="patient-row"]').length).toBeGreaterThanOrEqual(2);
-  });
-
-  /**
-   * Vérifie que le message d'erreur est affiché si l'API échoue.
-   */
-  it('affiche une erreur si l’API échoue', async () => {
-    vi.spyOn(patientService, 'fetchPatients').mockRejectedValue(new Error('Erreur API'));
-    const wrapper = mount(PatientsList);
-    await flushPromises();
-    expect(wrapper.get('[data-testid="error-message"]').text()).toContain('Erreur API');
-  });
-});
-
-/**
- * Test d'intégration de la création de patient
- * - Succès : le patient est ajouté à la liste
- * - Erreur de validation : les messages d'erreur sont affichés
- */
-describe('PatientsList.vue (création patient)', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
-  /**
-   * Vérifie qu'un patient est ajouté à la liste après une création réussie.
-   */
-  it('ajoute un patient à la liste (succès)', async () => {
-    // Mock initial : liste vide
-    vi.spyOn(patientService, 'fetchPatients').mockResolvedValueOnce([] as unknown as Patient[]);
-    // Mock création : succès (format ApiPatient)
-    vi.spyOn(patientService, 'createPatient').mockResolvedValue({
-      id: 3,
-      gender: 'M',
-      lastName: 'Nouveau',
-      firstName: 'Test',
-      birthDate: '1990-01-01',
-      phone: '0102030405',
-      email: 'nouveau@ex.com',
-    } as unknown as Patient);
-    // Mock fetch après création : retourne le nouveau patient (format ApiPatient)
-    vi.spyOn(patientService, 'fetchPatients').mockResolvedValueOnce([
-      {
-        id: 3,
-        gender: 'M',
-        lastName: 'Nouveau',
-        firstName: 'Test',
-        birthDate: '1990-01-01',
-        phone: '0102030405',
-        email: 'nouveau@ex.com',
-      } as unknown as Patient,
-    ] as unknown as Patient[]);
-    const wrapper = mount(PatientsList);
-    await flushPromises();
-    // Simule l'ouverture de la modale et la soumission du formulaire
-    await wrapper.find('button[aria-label="Ajouter un patient"]').trigger('click');
-    await flushPromises(); // attendre que la modale s'affiche
-    // Remplir le formulaire (adapter les sélecteurs pour utiliser les id)
-    const lastNameInput = wrapper.find('#lastName');
-    const firstNameInput = wrapper.find('#firstName');
-    const birthDateInput = wrapper.find('#dateNaissance');
-    const emailInput = wrapper.find('#email');
-    const sexeSelect = wrapper.find('#sexe');
-    expect(lastNameInput.exists()).toBe(true);
-    expect(firstNameInput.exists()).toBe(true);
-    expect(birthDateInput.exists()).toBe(true);
-    expect(emailInput.exists()).toBe(true);
-    expect(sexeSelect.exists()).toBe(true);
-    await lastNameInput.setValue('Nouveau');
-    await firstNameInput.setValue('Test');
-    await birthDateInput.setValue('1990-01-01');
-    await emailInput.setValue('nouveau@ex.com');
-    await sexeSelect.setValue('M');
-    await wrapper.find('form').trigger('submit.prevent');
-    // Attendre la propagation asynchrone et la fermeture de la modale
-    let tries = 0;
-    while (wrapper.text().includes('Ajouter un patient') && tries < 10) {
+  describe('Affichage des patients', () => {
+    it('affiche la liste des patients avec succès', async () => {
+      vi.spyOn(patientService, 'fetchPatients').mockResolvedValue(mockPatients);
+      const wrapper = mountPatientsList();
       await flushPromises();
-      tries++;
-    }
-    // Attendre que la liste soit mise à jour
-    tries = 0;
-    while (!wrapper.text().includes('Nouveau') && tries < 10) {
-      await flushPromises();
-      tries++;
-    }
-    // Vérifie que le patient apparaît dans la liste
-    expect(wrapper.text()).toContain('Nouveau');
-    expect(wrapper.text()).toContain('Test');
-    expect(wrapper.text()).toContain('nouveau@ex.com');
-  });
 
-  /**
-   * Vérifie que les erreurs de validation sont affichées si l'API retourne des violations.
-   */
-  it('affiche les erreurs de validation lors de la création', async () => {
-    vi.spyOn(patientService, 'fetchPatients').mockResolvedValueOnce([]);
-    vi.spyOn(patientService, 'createPatient').mockRejectedValue({
-      violations: {
-        nom: ['Le nom est requis.'],
-        email: ['Email invalide'],
-      },
+      expect(wrapper.text()).toContain('TEST');
+      expect(wrapper.text()).toContain('T');
+      expect(wrapper.text()).toContain('DEMO');
+      expect(wrapper.text()).toContain('D');
+      expect(wrapper.text()).toContain('test@ex.com');
+      expect(wrapper.text()).toContain('demo@ex.com');
+      expect(wrapper.findAll('[data-testid="patient-row"]').length).toBeGreaterThanOrEqual(2);
     });
-    const wrapper = mount(PatientsList);
-    await flushPromises();
-    await wrapper.find('button[aria-label="Ajouter un patient"]').trigger('click');
-    await flushPromises(); // attendre que la modale s'affiche
-    // Remplir le champ email avec une valeur invalide pour déclencher la validation
-    const emailInput = wrapper.find('#email');
-    expect(emailInput.exists()).toBe(true);
-    await emailInput.setValue('test@');
-    await wrapper.find('form').trigger('submit.prevent');
-    await flushPromises();
-    await flushPromises();
-    // Vérifie que les messages d'erreur sont affichés
-    expect(wrapper.text()).toContain('Le nom est requis.');
-    expect(wrapper.text()).toContain("L'email doit contenir un point après l'arobase.");
-  });
-});
 
-/**
- * Test d'intégration de la modification et suppression de patient
- * - Succès : le patient est modifié ou supprimé dans la liste
- */
-describe('PatientsList.vue (édition/suppression patient)', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
+    it("affiche le message d'erreur en cas d'échec API", async () => {
+      vi.spyOn(patientService, 'fetchPatients').mockRejectedValue(new Error('Erreur API'));
+      const wrapper = mountPatientsList();
+      await flushPromises();
+
+      expect(wrapper.get('[data-testid="error-message"]').text()).toContain('Erreur API');
+    });
   });
 
-  it('modifie un patient existant (succès)', async () => {
-    // Mock initial : 1 patient
-    vi.spyOn(patientService, 'fetchPatients').mockResolvedValueOnce([
-      {
+  describe('Création de patients', () => {
+    it('ajoute un patient avec succès', async () => {
+      vi.spyOn(patientService, 'fetchPatients').mockResolvedValueOnce([] as unknown as Patient[]);
+      vi.spyOn(patientService, 'createPatient').mockResolvedValue({
+        id: 3,
+        nom: 'Nouveau',
+        prenom: 'Test',
+        sexe: 'M',
+        dateNaissance: '1990-01-01',
+        telephone: '0102030405',
+        email: 'nouveau@ex.com',
+      } as unknown as Patient);
+      vi.spyOn(patientService, 'fetchPatients').mockResolvedValueOnce([
+        {
+          id: 3,
+          nom: 'Nouveau',
+          prenom: 'Test',
+          sexe: 'M',
+          dateNaissance: '1990-01-01',
+          telephone: '0102030405',
+          email: 'nouveau@ex.com',
+        } as unknown as Patient,
+      ] as unknown as Patient[]);
+
+      const wrapper = mountPatientsList();
+      await flushPromises();
+
+      await wrapper.find('button[aria-label="Ajouter un patient"]').trigger('click');
+      await flushPromises();
+
+      const lastNameInput = wrapper.find('#lastName');
+      const firstNameInput = wrapper.find('#firstName');
+      const birthDateInput = wrapper.find('#dateNaissance');
+      const emailInput = wrapper.find('#email');
+      const sexeSelect = wrapper.find('#sexe');
+
+      expect(lastNameInput.exists()).toBe(true);
+      expect(firstNameInput.exists()).toBe(true);
+      expect(birthDateInput.exists()).toBe(true);
+      expect(emailInput.exists()).toBe(true);
+      expect(sexeSelect.exists()).toBe(true);
+
+      await lastNameInput.setValue('Nouveau');
+      await firstNameInput.setValue('Test');
+      await birthDateInput.setValue('1990-01-01');
+      await emailInput.setValue('nouveau@ex.com');
+      await sexeSelect.setValue('M');
+      await wrapper.find('form').trigger('submit.prevent');
+
+      await waitForModalClose(wrapper);
+      await waitForContent(wrapper, 'nouveau');
+
+      expect(wrapper.text().toLowerCase()).toContain('nouveau');
+      expect(wrapper.text().toLowerCase()).toContain('test');
+      expect(wrapper.text()).toContain('nouveau@ex.com');
+    });
+
+    it('affiche les erreurs de validation lors de la création', async () => {
+      vi.spyOn(patientService, 'fetchPatients').mockResolvedValueOnce([]);
+      vi.spyOn(patientService, 'createPatient').mockRejectedValue({
+        violations: {
+          nom: ['Le nom est requis.'],
+          email: ['Email invalide'],
+        },
+      });
+
+      const wrapper = mountPatientsList();
+      await flushPromises();
+
+      await wrapper.find('button[aria-label="Ajouter un patient"]').trigger('click');
+      await flushPromises();
+
+      const emailInput = wrapper.find('#email');
+      expect(emailInput.exists()).toBe(true);
+      await emailInput.setValue('test@');
+      await wrapper.find('form').trigger('submit.prevent');
+      await flushPromises();
+      await flushPromises();
+
+      expect(wrapper.text()).toContain('Le nom est requis.');
+      expect(wrapper.text()).toContain("L'email doit contenir un point après l'arobase.");
+    });
+  });
+
+  describe('Modification de patients', () => {
+    it('modifie un patient avec succès', async () => {
+      vi.spyOn(patientService, 'fetchPatients').mockResolvedValueOnce([
+        {
+          id: 1,
+          nom: 'Test',
+          prenom: 'T',
+          sexe: 'M',
+          dateNaissance: '2000-01-01',
+          telephone: '',
+          email: 'test@ex.com',
+        } as unknown as Patient,
+      ] as unknown as Patient[]);
+      vi.spyOn(patientService, 'updatePatient').mockResolvedValue({
         id: 1,
-        gender: 'M',
-        lastName: 'Test',
-        firstName: 'T',
-        birthDate: '2000-01-01',
-        phone: '',
-        email: 'test@ex.com',
-      } as unknown as Patient,
-    ] as unknown as Patient[]);
-    // Mock update : succès
-    vi.spyOn(patientService, 'updatePatient').mockResolvedValue({
-      id: 1,
-      gender: 'M',
-      lastName: 'TestModif',
-      firstName: 'T',
-      birthDate: '2000-01-01',
-      phone: '',
-      email: 'testmodif@ex.com',
-    } as unknown as Patient);
-    // Mock fetch après update
-    vi.spyOn(patientService, 'fetchPatients').mockResolvedValueOnce([
-      {
-        id: 1,
-        gender: 'M',
-        lastName: 'TestModif',
-        firstName: 'T',
-        birthDate: '2000-01-01',
-        phone: '',
+        nom: 'TestModif',
+        prenom: 'T',
+        sexe: 'M',
+        dateNaissance: '2000-01-01',
+        telephone: '',
         email: 'testmodif@ex.com',
-      } as unknown as Patient,
-    ] as unknown as Patient[]);
-    const wrapper = mount(PatientsList);
-    await flushPromises();
-    // Simule l'ouverture du formulaire d'édition (adapter le sélecteur si besoin)
-    await wrapper.find('[data-testid="edit-patient-btn"]').trigger('click');
-    await flushPromises();
-    // Remplir le champ nom
-    const lastNameInput = wrapper.find('#lastName');
-    expect(lastNameInput.exists()).toBe(true);
-    await lastNameInput.setValue('TestModif');
-    await wrapper.find('form').trigger('submit.prevent');
-    await flushPromises();
-    // Vérifie que le patient modifié apparaît dans la liste
-    expect(wrapper.text()).toContain('TestModif');
-    expect(wrapper.text()).toContain('testmodif@ex.com');
+      } as unknown as Patient);
+      vi.spyOn(patientService, 'fetchPatients').mockResolvedValueOnce([
+        {
+          id: 1,
+          nom: 'TestModif',
+          prenom: 'T',
+          sexe: 'M',
+          dateNaissance: '2000-01-01',
+          telephone: '',
+          email: 'testmodif@ex.com',
+        } as unknown as Patient,
+      ] as unknown as Patient[]);
+
+      const wrapper = mountPatientsList();
+      await flushPromises();
+
+      await wrapper.find('[data-testid="edit-patient-btn"]').trigger('click');
+      await flushPromises();
+
+      const lastNameInput = wrapper.find('#lastName');
+      expect(lastNameInput.exists()).toBe(true);
+      await lastNameInput.setValue('TestModif');
+      await wrapper.find('form').trigger('submit.prevent');
+      await flushPromises();
+
+      expect(wrapper.text().toLowerCase()).toContain('testmodif');
+      expect(wrapper.text().toLowerCase()).toContain('t');
+      expect(wrapper.text()).toContain('testmodif@ex.com');
+    });
   });
 
-  it('supprime un patient existant (succès)', async () => {
-    // Mock initial : 1 patient
-    vi.spyOn(patientService, 'fetchPatients').mockResolvedValueOnce([
-      {
-        id: 2,
-        gender: 'F',
-        lastName: 'Demo',
-        firstName: 'D',
-        birthDate: '1995-05-05',
-        phone: '',
-        email: 'demo@ex.com',
-      } as unknown as Patient,
-    ] as unknown as Patient[]);
-    // Mock suppression : succès
-    vi.spyOn(patientService, 'deletePatient').mockResolvedValue(true);
-    // Mock fetch après suppression : liste vide
-    vi.spyOn(patientService, 'fetchPatients').mockResolvedValueOnce([] as unknown as Patient[]);
-    const wrapper = mount(PatientsList);
-    await flushPromises();
-    // Simule le clic sur le bouton de suppression
-    await wrapper.find('[data-testid="delete-patient-btn"]').trigger('click');
-    await flushPromises();
-    // Simule le clic sur le bouton de confirmation dans la modale
-    await wrapper.find('[data-testid="confirm-delete-btn"]').trigger('click');
-    await flushPromises();
-    // Vérifie que le patient n'apparaît plus dans la liste
-    expect(wrapper.text()).not.toContain('Demo');
-    expect(wrapper.text()).not.toContain('demo@ex.com');
+  describe('Suppression de patients', () => {
+    it('supprime un patient avec succès', async () => {
+      vi.spyOn(patientService, 'fetchPatients').mockResolvedValueOnce([
+        {
+          id: 2,
+          nom: 'Demo',
+          prenom: 'D',
+          sexe: 'F',
+          dateNaissance: '1995-05-05',
+          telephone: '',
+          email: 'demo@ex.com',
+        } as unknown as Patient,
+      ] as unknown as Patient[]);
+      vi.spyOn(patientService, 'deletePatient').mockResolvedValue(true);
+      vi.spyOn(patientService, 'fetchPatients').mockResolvedValueOnce([] as unknown as Patient[]);
+
+      const wrapper = mountPatientsList();
+      await flushPromises();
+
+      await wrapper.find('[data-testid="delete-patient-btn"]').trigger('click');
+      await flushPromises();
+      await wrapper.find('[data-testid="confirm-delete-btn"]').trigger('click');
+      await flushPromises();
+
+      expect(wrapper.text().toLowerCase()).not.toContain('demo');
+      expect(wrapper.text()).not.toContain('demo@ex.com');
+    });
+
+    it('affiche une erreur si la suppression échoue', async () => {
+      vi.spyOn(patientService, 'fetchPatients').mockResolvedValueOnce([
+        {
+          id: 2,
+          nom: 'Demo',
+          prenom: 'D',
+          sexe: 'F',
+          dateNaissance: '1995-05-05',
+          telephone: '',
+          email: 'demo@ex.com',
+        } as unknown as Patient,
+      ] as unknown as Patient[]);
+      vi.spyOn(patientService, 'deletePatient').mockRejectedValue(
+        new Error('Erreur API suppression')
+      );
+
+      const wrapper = mountPatientsList();
+      await flushPromises();
+
+      await wrapper.find('[data-testid="delete-patient-btn"]').trigger('click');
+      await flushPromises();
+      await wrapper.find('[data-testid="confirm-delete-btn"]').trigger('click');
+      await flushPromises();
+
+      expect(wrapper.text()).toContain('Erreur API suppression');
+    });
+
+    it('affiche une erreur si la suppression retourne false', async () => {
+      vi.spyOn(patientService, 'fetchPatients').mockResolvedValueOnce([
+        {
+          id: 2,
+          nom: 'Demo',
+          prenom: 'D',
+          sexe: 'F',
+          dateNaissance: '1995-05-05',
+          telephone: '',
+          email: 'demo@ex.com',
+        } as unknown as Patient,
+      ] as unknown as Patient[]);
+      vi.spyOn(patientService, 'deletePatient').mockResolvedValue(false as unknown as true);
+
+      const wrapper = mountPatientsList();
+      await flushPromises();
+
+      await wrapper.find('[data-testid="delete-patient-btn"]').trigger('click');
+      await flushPromises();
+      await wrapper.find('[data-testid="confirm-delete-btn"]').trigger('click');
+      await flushPromises();
+
+      expect(wrapper.text()).toMatch(/erreur.*suppression/i);
+    });
   });
 
-  /**
-   * Vérifie que le message d'erreur est affiché si l'API échoue lors de la suppression d'un patient.
-   * - Mocke un échec de suppression (deletePatient reject)
-   * - Vérifie l'affichage du message d'erreur dans l'UI
-   */
-  it('affiche une erreur si la suppression échoue', async () => {
-    // Mock initial : 1 patient
-    vi.spyOn(patientService, 'fetchPatients').mockResolvedValueOnce([
-      {
-        id: 2,
-        gender: 'F',
-        lastName: 'Demo',
-        firstName: 'D',
-        birthDate: '1995-05-05',
-        phone: '',
-        email: 'demo@ex.com',
-      } as unknown as Patient,
-    ] as unknown as Patient[]);
-    // Mock suppression : échec
-    vi.spyOn(patientService, 'deletePatient').mockRejectedValue(
-      new Error('Erreur API suppression')
-    );
-    const wrapper = mount(PatientsList);
-    await flushPromises();
-    // Simule le clic sur le bouton de suppression
-    await wrapper.find('[data-testid="delete-patient-btn"]').trigger('click');
-    await flushPromises();
-    // Simule le clic sur le bouton de confirmation dans la modale
-    await wrapper.find('[data-testid="confirm-delete-btn"]').trigger('click');
-    await flushPromises();
-    // Vérifie que le message d'erreur s'affiche
-    expect(wrapper.text()).toContain('Erreur API suppression');
-  });
-});
+  describe('Accessibilité', () => {
+    it('bouton Ajouter un patient est focusable au clavier', async () => {
+      vi.spyOn(patientService, 'fetchPatients').mockResolvedValue([] as unknown as Patient[]);
+      const wrapper = mountPatientsList({ attachTo: document.body });
+      await flushPromises();
 
-/**
- * Test d'accessibilité de la vue PatientsList.vue
- * - Vérifie que le bouton "Ajouter un patient" est accessible au clavier (focusable)
- * - Garantit la conformité minimale pour la navigation clavier
- */
-describe('PatientsList.vue (accessibilité)', () => {
-  /**
-   * Vérifie que le bouton "Ajouter un patient" peut recevoir le focus via .focus()
-   * (simulateur de navigation clavier)
-   */
-  it('le bouton Ajouter un patient est focusable au clavier', async () => {
-    vi.spyOn(patientService, 'fetchPatients').mockResolvedValue([] as unknown as Patient[]);
-    const wrapper = mount(PatientsList, { attachTo: document.body });
-    await flushPromises();
-    const addBtn = wrapper.find('button[aria-label="Ajouter un patient"]');
-    expect(addBtn.exists()).toBe(true);
-    (addBtn.element as HTMLElement).focus();
-    expect(document.activeElement).toBe(addBtn.element);
-    wrapper.unmount();
+      const addBtn = wrapper.find('button[aria-label="Ajouter un patient"]');
+      expect(addBtn.exists()).toBe(true);
+      (addBtn.element as HTMLElement).focus();
+      expect(document.activeElement).toBe(addBtn.element);
+
+      wrapper.unmount();
+    });
   });
 });

@@ -1,36 +1,47 @@
-/**
- * Tests unitaires du composant PatientCard.vue
- * --------------------------------------------
- * - Vérifie l'affichage des informations patient (nom, date, etc.)
- * - Vérifie l'affichage des icônes de genre selon la donnée
- * - Vérifie l'affichage des actions par défaut
- *
- * Convention :
- *   - Utilise des props de base typées
- *   - Couvre les cas d'affichage principaux et les variantes d'icônes
- */
+/*
+-------------------------------------------------
+Sommaire des blocs de tests :
+- Affichage des informations patient
+- Icônes de genre
+- Actions par défaut
+Helpers/mocks centralisés en haut de fichier.
+-------------------------------------------------
+*/
+
 import { describe, it, expect } from 'vitest';
-import { mount } from '@vue/test-utils';
+import { mount, VueWrapper } from '@vue/test-utils';
 import PatientCard from '../PatientCard.vue';
 
-describe('PatientCard', () => {
-  const baseProps = {
-    id: 1,
-    gender: 'F',
-    lastName: 'Dupont',
-    firstName: 'Marie',
-    birthDate: '1985-04-12',
-    phone: '0601020304',
-    email: 'marie.dupont@email.com',
-  };
+// Helper pour monter le composant PatientCard avec props typées
+function mountPatientCard(props: {
+  id: number | string;
+  sexe: string;
+  nom: string;
+  prenom: string;
+  dateNaissance: string;
+  telephone: string;
+  email: string;
+}): VueWrapper<InstanceType<typeof PatientCard>> {
+  return mount(PatientCard, { props });
+}
 
-  /**
-   * Vérifie que le nom complet et la date de naissance sont affichés correctement
-   */
+const baseProps = {
+  id: 1,
+  sexe: 'F',
+  nom: 'Dupont',
+  prenom: 'Marie',
+  dateNaissance: '1985-04-12',
+  telephone: '0601020304',
+  email: 'marie.dupont@email.com',
+};
+
+// -----------------------------------------------------------------------------
+// Bloc Affichage
+// -----------------------------------------------------------------------------
+describe('PatientCard – Affichage', () => {
   it('affiche le nom complet et la date de naissance', () => {
-    const wrapper = mount(PatientCard, { props: baseProps });
-    expect(wrapper.text()).toContain('Dupont Marie');
-    // Date attendue au format littéral local (ex: 12 avril 1985)
+    const wrapper = mountPatientCard(baseProps);
+    expect(wrapper.text()).toContain('DUPONT Marie');
     const expectedDate = new Date('1985-04-12').toLocaleDateString(undefined, {
       year: 'numeric',
       month: 'long',
@@ -38,24 +49,28 @@ describe('PatientCard', () => {
     });
     expect(wrapper.text()).toContain(expectedDate);
   });
+});
 
-  /**
-   * Vérifie que l'icône de genre appropriée est affichée selon la valeur de gender
-   */
+// -----------------------------------------------------------------------------
+// Bloc Icônes
+// -----------------------------------------------------------------------------
+describe('PatientCard – Icônes', () => {
   it('affiche l’icône de genre appropriée', () => {
-    const wrapperF = mount(PatientCard, { props: { ...baseProps, gender: 'F' } });
+    const wrapperF = mountPatientCard({ ...baseProps, sexe: 'F' });
     expect(wrapperF.html()).toContain('female');
-    const wrapperM = mount(PatientCard, { props: { ...baseProps, gender: 'M' } });
+    const wrapperM = mountPatientCard({ ...baseProps, sexe: 'M' });
     expect(wrapperM.html()).toContain('male');
-    const wrapperX = mount(PatientCard, { props: { ...baseProps, gender: 'X' } });
+    const wrapperX = mountPatientCard({ ...baseProps, sexe: 'X' });
     expect(wrapperX.html()).toContain('transgender');
   });
+});
 
-  /**
-   * Vérifie que les actions par défaut sont affichées si aucun slot n'est fourni
-   */
+// -----------------------------------------------------------------------------
+// Bloc Actions
+// -----------------------------------------------------------------------------
+describe('PatientCard – Actions', () => {
   it('affiche les actions par défaut si aucun slot', () => {
-    const wrapper = mount(PatientCard, { props: baseProps });
+    const wrapper = mountPatientCard(baseProps);
     expect(wrapper.text()).toContain('Voir');
     expect(wrapper.text()).toContain('Modifier');
     expect(wrapper.text()).toContain('Supprimer');

@@ -25,61 +25,46 @@
     <div class="bg-white rounded-[6px] shadow p-8">
       <h1 class="text-2xl font-bold text-blue-800 mb-6 text-center">Fiche patient</h1>
       <PatientView v-if="patient" :patient="patient" />
-      <div v-else class="text-center text-red-800 font-semibold flex flex-col items-center gap-2">
+      <div
+        v-else-if="errorMsg"
+        class="text-center text-red-800 font-semibold flex flex-col items-center gap-2"
+      >
         <BaseIcon name="error" size="2em" class="mb-2" />
-        Patient introuvable.
+        <div role="alert">{{ errorMsg + '' }}</div>
       </div>
+      <div v-else class="text-center text-gray-500">Chargement en cours...</div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import PatientView from '../components/PatientView.vue';
 import BaseIcon from '../components/BaseIcon.vue';
-
-// Mock temporaire (à remplacer par appel API plus tard)
-const patients = [
-  {
-    id: 1,
-    sexe: 'F',
-    nom: 'Dupont',
-    prenom: 'Marie',
-    dateNaissance: '1985-04-12',
-    telephone: '0601020304',
-    email: 'marie.dupont@email.com',
-  },
-  {
-    id: 2,
-    sexe: 'M',
-    nom: 'Martin',
-    prenom: 'Paul',
-    dateNaissance: '1978-11-23',
-    telephone: '',
-    email: '',
-  },
-  {
-    id: 3,
-    sexe: 'F',
-    nom: 'Durand',
-    prenom: 'Sophie',
-    dateNaissance: '1992-07-05',
-    telephone: '0611223344',
-    email: 'sophie.durand@email.com',
-  },
-  {
-    id: 4,
-    sexe: 'X',
-    nom: 'Alex',
-    prenom: 'Morgan',
-    dateNaissance: '1990-01-01',
-    telephone: '0612345678',
-    email: 'alex.morgan@email.com',
-  },
-];
+import { fetchPatients } from '../services/patientService';
+import type { Patient } from '../types/Patient';
 
 const route = useRoute();
-const patientId = Number(route.params.id);
-const patient = ref(patients.find((p) => p.id === patientId) || null);
+const patient = ref<Patient | null>(null);
+const loading = ref(true);
+const errorMsg = ref('');
+
+onMounted(async () => {
+  loading.value = true;
+  errorMsg.value = '';
+  try {
+    const id = Number(route.params.id);
+    if (!id) throw new Error('ID patient invalide');
+    const patients = await fetchPatients();
+    patient.value = patients.find((p) => p.id === id) || null;
+    if (!patient.value) errorMsg.value = 'Patient introuvable.';
+  } catch (e: unknown) {
+    const errorText = e instanceof Error ? e.message : String(e);
+    errorMsg.value = String(errorText || 'Erreur lors du chargement du patient.');
+    patient.value = null;
+  } finally {
+    loading.value = false;
+  }
+});
 </script>

@@ -36,7 +36,8 @@
           src="/medisys-illustration.svg"
           alt="Illustration médicale"
           class="w-48 md:w-64"
-          loading="lazy"
+          width="192"
+          height="192"
         />
         <div class="flex flex-col sm:flex-row gap-4 w-full justify-center mt-6">
           <router-link
@@ -45,13 +46,13 @@
           >
             Voir les patients
           </router-link>
-          <button
-            class="inline-block border border-green-800 text-green-800 px-6 py-2 rounded-[6px] font-semibold bg-gray-100 cursor-not-allowed opacity-60 text-center"
-            disabled
-            aria-label="Prise de rendez-vous à venir"
+          <router-link
+            to="/appointments"
+            class="inline-block border border-green-800 text-green-800 px-6 py-2 rounded-[6px] font-semibold hover:bg-green-800 hover:text-white focus:outline focus:outline-2 focus:outline-green-800 transition-colors duration-200 text-center"
+            aria-label="Prendre un rendez-vous"
           >
-            Prendre un rendez-vous <span class="ml-2 text-xs">(à venir)</span>
-          </button>
+            Prendre un rendez-vous
+          </router-link>
         </div>
       </div>
       <!-- Colonne droite : contenu principal -->
