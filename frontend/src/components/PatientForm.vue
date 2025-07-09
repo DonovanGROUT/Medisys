@@ -213,7 +213,7 @@
       <button
         type="button"
         @click="$emit('cancel')"
-        class="rounded-[6px] border border-[#263238] text-[#263238] px-4 py-2 font-semibold hover:bg-[#263238] hover:text-white transition-colors duration-200 focus:outline focus:outline-2 focus:outline-[#263238]"
+        class="rounded-[6px] border border-[#263238] text-[#263238] px-4 py-2 font-semibold hover:bg-[#263238] hover:text-white transition-all duration-200 focus:outline focus:outline-2 focus:outline-[#263238]"
         aria-label="Annuler la saisie"
       >
         Annuler
@@ -221,7 +221,7 @@
       <button
         type="submit"
         :disabled="!isFormValid"
-        class="rounded-[6px] border border-green-800 bg-green-800 text-white px-4 py-2 font-semibold hover:bg-green-900 transition-colors duration-200 focus:outline focus:outline-2 focus:outline-green-800 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+        class="rounded-[6px] border border-green-800 bg-green-800 text-white px-4 py-2 font-semibold hover:bg-green-900 transition-all duration-200 focus:outline focus:outline-2 focus:outline-green-800 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
         aria-label="Valider le formulaire patient"
       >
         <BaseIcon name="check" size="1.2em" class="mr-1 align-middle" /> Valider
@@ -404,7 +404,7 @@ function onSubmit() {
 }
 </script>
 
-<style scoped>
+<style scoped lang="postcss">
 .input {
   @apply w-full rounded-[6px] border border-[#B0BEC5] px-3 py-2 focus:outline focus:outline-2 focus:outline-[#1976D2] transition-colors duration-200;
 }

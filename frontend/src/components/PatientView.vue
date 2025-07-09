@@ -19,14 +19,14 @@
 -->
 <template>
   <!-- Fiche détaillée du patient -->
-  <div class="space-y-3">
+  <div v-if="patient" class="space-y-3">
     <div class="flex items-center gap-2">
       <BaseIcon name="person" color="#1976D2" size="1.3em" />
-      <span class="font-semibold">Nom :</span> {{ patient.nom }}
+      <span class="font-semibold">Nom :</span> {{ formatNom(patient.nom) }}
     </div>
     <div class="flex items-center gap-2">
       <BaseIcon name="person" color="#1976D2" size="1.3em" />
-      <span class="font-semibold">Prénom :</span> {{ patient.prenom }}
+      <span class="font-semibold">Prénom :</span> {{ formatPrenom(patient.prenom) }}
     </div>
     <div class="flex items-center gap-2">
       <BaseIcon
@@ -49,7 +49,19 @@
       <BaseIcon name="email" color="#1976D2" size="1.3em" />
       <span class="font-semibold">Email :</span> {{ patient.email || '—' }}
     </div>
+    <div class="flex justify-end mt-4">
+      <router-link
+        v-if="patient"
+        :to="{ path: '/appointments', query: { patient: patient.id } }"
+        class="rounded-[6px] border border-blue-800 text-blue-800 bg-white px-4 py-2 font-semibold hover:bg-blue-800 hover:text-white transition-all duration-200 focus:outline focus:outline-2 focus:outline-blue-800 flex items-center gap-2"
+        aria-label="Voir les rendez-vous de ce patient"
+      >
+        <BaseIcon name="calendar_month" size="1.2em" aria-hidden="true" />
+        Rendez-vous
+      </router-link>
+    </div>
   </div>
+  <div v-else class="text-gray-500 italic">Aucun patient sélectionné.</div>
 </template>
 
 <script setup lang="ts">
@@ -58,12 +70,14 @@
 // -----------------------------------------------------------------------------
 import BaseIcon from './BaseIcon.vue';
 import { computed } from 'vue';
+import { formatNom, formatPrenom } from '../utils/formatNomPrenom';
+import type { Patient } from '../types/Patient';
 
 /**
  * Props du composant PatientView
- * @prop {Patient} patient - Données du patient à afficher
+ * @prop {Patient|null} patient - Données du patient à afficher (ou null)
  */
-const props = defineProps<{ patient: any }>();
+const props = defineProps<{ patient: Patient | null }>();
 
 /**
  * Date de naissance formatée selon la langue du navigateur

@@ -9,15 +9,15 @@
 -->
 <template>
   <div class="max-w-7xl mx-auto mt-8 px-4">
-    <div class="bg-white rounded-[6px] shadow p-8">
+    <div class="bg-white rounded-[6px] shadow p-8 min-h-[340px]">
       <!-- Titre de la page -->
-      <h2 class="text-2xl font-bold text-[#1976D2] mb-4 text-center">Liste des patients</h2>
+      <h2 class="text-2xl font-bold text-blue-800 mb-4 text-center">Liste des patients</h2>
       <!-- Alertes (gérées globalement dans App.vue) -->
       <div class="mb-4">
         <div v-if="errors.global" class="text-red-600 font-bold mb-4" data-testid="error-message">
           {{ errors.global }}
         </div>
-        <!-- Les alertes globales sont désormais gérées par App.vue -->
+        <!-- Les alertes globales sont gérées par App.vue -->
       </div>
       <!-- Boutons d’action principaux (ajout, retour) -->
       <div
@@ -32,93 +32,55 @@
         </button>
         <router-link
           to="/"
-          class="rounded-[6px] border border-[#263238] text-[#263238] px-4 py-2 font-semibold hover:bg-[#263238] hover:text-white transition-colors duration-200 focus:outline focus:outline-2 focus:outline-[#263238] sm:w-auto w-full"
+          class="rounded-[6px] border border-slate-800 text-slate-800 px-4 py-2 font-semibold hover:bg-slate-800 hover:text-white transition-colors duration-200 focus:outline focus:outline-2 focus:outline-slate-800 sm:w-auto w-full"
           aria-label="Retour à l'accueil"
           >Retour à l'accueil</router-link
         >
       </div>
-      <!-- Version mobile : cards (< 450px) -->
-      <div class="block min-[450px]:hidden space-y-4">
-        <!-- Affichage des patients sous forme de cartes -->
-        <PatientCard
-          v-for="patient in patients"
-          :key="patient.id"
-          :id="patient.id"
-          :gender="patient.sexe"
-          :lastName="patient.nom"
-          :firstName="patient.prenom"
-          :birthDate="patient.dateNaissance"
-          :phone="patient.telephone"
-          :email="patient.email"
-          data-testid="patient-row"
+      <!-- Barre de recherche patient -->
+      <div class="mb-4 flex flex-col sm:flex-row sm:items-start gap-2">
+        <label
+          for="patient-search"
+          class="font-semibold text-slate-800 sm:mr-2 min-w-fit flex items-center h-10"
+          >Rechercher un patient :</label
         >
-          <template #actions>
-            <PatientActions
-              @view="openView(patient)"
-              @edit="openEdit(patient)"
-              @delete="openDelete(patient)"
-            />
-          </template>
-        </PatientCard>
+        <div class="flex flex-col w-full sm:w-80">
+          <PatientAutocomplete
+            id="patient-search"
+            v-model="searchPatient"
+            placeholder="Nom ou prénom..."
+            class="w-full"
+          />
+        </div>
       </div>
-      <!-- Table responsive desktop/tablette (>= 450px) -->
-      <div class="hidden min-[450px]:block overflow-x-auto">
-        <table class="min-w-full border text-base rounded-[6px]">
-          <thead class="bg-[#F5F5F5]">
-            <tr>
-              <th
-                class="px-2 py-2 sm:px-4 sm:py-3 font-semibold text-[#263238] text-sm sm:text-base"
-              >
-                ID
-              </th>
-              <th
-                class="px-2 py-2 sm:px-4 sm:py-3 font-semibold text-[#263238] text-sm sm:text-base"
-              >
-                Sexe
-              </th>
-              <th
-                class="px-2 py-2 sm:px-4 sm:py-3 font-semibold text-[#263238] text-sm sm:text-base max-w-[100px] break-words"
-              >
-                Nom
-              </th>
-              <th
-                class="px-2 py-2 sm:px-4 sm:py-3 font-semibold text-[#263238] text-sm sm:text-base max-w-[100px] break-words"
-              >
-                Prénom
-              </th>
-              <th
-                class="px-2 py-2 sm:px-4 sm:py-3 font-semibold text-[#263238] min-[810px]:table-cell min-[640px]:hidden hidden text-sm sm:text-base"
-              >
-                Date de naissance
-              </th>
-              <th
-                class="px-2 py-2 sm:px-4 sm:py-3 font-semibold text-[#263238] xl:table-cell hidden text-sm sm:text-base"
-              >
-                Téléphone
-              </th>
-              <th
-                class="px-2 py-2 sm:px-4 sm:py-3 font-semibold text-[#263238] 2xl:table-cell hidden text-sm sm:text-base"
-              >
-                Email
-              </th>
-              <th
-                class="px-2 py-2 sm:px-4 sm:py-3 font-semibold text-[#263238] text-sm sm:text-base"
-              >
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <PatientTableRow
-              v-for="patient in patients"
+      <!-- Loader pendant le chargement -->
+      <!-- Wrapper layout pour stabiliser le CLS et garantir l'affichage mobile -->
+      <div class="min-h-[480px] w-full">
+        <PatientListLoader v-if="loading" />
+        <div v-else>
+          <div
+            v-if="!errors.global && filteredPatients.length === 0"
+            class="text-slate-800 text-center my-8"
+            data-testid="empty-message"
+          >
+            Aucun patient à afficher
+          </div>
+          <!-- Version mobile & tablette < 569px : cards (1 colonne <450px, 2 colonnes 450-568px) -->
+          <div
+            v-if="!errors.global && filteredPatients.length > 0"
+            class="grid grid-cols-1 min-[450px]:grid-cols-2 min-[569px]:hidden gap-4"
+          >
+            <!-- Affichage des patients sous forme de cartes -->
+            <PatientCard
+              v-for="patient in filteredPatients"
               :key="patient.id"
               :id="patient.id"
-              :gender="patient.sexe"
-              :lastName="patient.nom"
-              :firstName="patient.prenom"
-              :birthDate="patient.dateNaissance"
-              :phone="patient.telephone"
-              :email="patient.email"
+              :sexe="patient.sexe"
+              :nom="patient.nom"
+              :prenom="patient.prenom"
+              :dateNaissance="patient.dateNaissance"
+              :telephone="patient.telephone ?? ''"
+              :email="patient.email ?? ''"
               data-testid="patient-row"
             >
               <template #actions>
@@ -128,9 +90,83 @@
                   @delete="openDelete(patient)"
                 />
               </template>
-            </PatientTableRow>
-          </tbody>
-        </table>
+            </PatientCard>
+          </div>
+          <!-- Table responsive desktop/tablette (>= 569px) -->
+          <div
+            v-if="!errors.global && filteredPatients.length > 0"
+            class="hidden min-[569px]:block overflow-x-auto"
+          >
+            <table class="min-w-full border text-base rounded-[6px]">
+              <thead class="bg-[#F5F5F5]">
+                <tr>
+                  <th
+                    class="px-2 py-2 sm:px-4 sm:py-3 font-semibold text-slate-800 text-sm sm:text-base"
+                  >
+                    ID
+                  </th>
+                  <th
+                    class="px-2 py-2 sm:px-4 sm:py-3 font-semibold text-slate-800 text-sm sm:text-base"
+                  >
+                    Sexe
+                  </th>
+                  <th
+                    class="px-2 py-2 sm:px-4 sm:py-3 font-semibold text-slate-800 text-sm sm:text-base max-w-[100px] break-words"
+                  >
+                    Nom
+                  </th>
+                  <th
+                    class="px-2 py-2 sm:px-4 sm:py-3 font-semibold text-slate-800 text-sm sm:text-base max-w-[100px] break-words"
+                  >
+                    Prénom
+                  </th>
+                  <th
+                    class="px-2 py-2 sm:px-4 sm:py-3 font-semibold text-slate-800 text-sm sm:text-base min-[810px]:table-cell min-[640px]:hidden hidden"
+                  >
+                    Date de naissance
+                  </th>
+                  <th
+                    class="px-2 py-2 sm:px-4 sm:py-3 font-semibold text-slate-800 text-sm sm:text-base xl:table-cell hidden"
+                  >
+                    Téléphone
+                  </th>
+                  <th
+                    class="px-2 py-2 sm:px-4 sm:py-3 font-semibold text-slate-800 text-sm sm:text-base 2xl:table-cell hidden"
+                  >
+                    Email
+                  </th>
+                  <th
+                    class="px-2 py-2 sm:px-4 sm:py-3 font-semibold text-slate-800 text-sm sm:text-base"
+                  >
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <PatientTableRow
+                  v-for="patient in filteredPatients"
+                  :key="patient.id"
+                  :id="patient.id"
+                  :sexe="patient.sexe"
+                  :nom="patient.nom"
+                  :prenom="patient.prenom"
+                  :dateNaissance="patient.dateNaissance"
+                  :telephone="patient.telephone ?? ''"
+                  :email="patient.email ?? ''"
+                  data-testid="patient-row"
+                >
+                  <template #actions>
+                    <PatientActions
+                      @view="openView(patient)"
+                      @edit="openEdit(patient)"
+                      @delete="openDelete(patient)"
+                    />
+                  </template>
+                </PatientTableRow>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
       <!-- Modale principale (création, édition, vue) -->
       <Modal v-if="showModal" :model-value="showModal" @update:modelValue="closeModal">
@@ -160,7 +196,7 @@
           <div class="flex justify-end mt-4">
             <button
               @click="closeModal"
-              class="rounded-[6px] border border-[#263238] text-[#263238] px-4 py-2 font-semibold hover:bg-[#263238] hover:text-white transition-colors duration-200 focus:outline focus:outline-2 focus:outline-[#263238]"
+              class="rounded-[6px] border border-slate-800 text-slate-800 px-4 py-2 font-semibold hover:bg-slate-800 hover:text-white transition-colors duration-200 focus:outline focus:outline-2 focus:outline-slate-800"
             >
               Fermer
             </button>
@@ -195,51 +231,36 @@ import PatientView from '../components/PatientView.vue';
 import PatientActions from '../components/PatientActions.vue';
 import ConfirmDelete from '../components/ConfirmDelete.vue';
 import BaseIcon from '../components/BaseIcon.vue';
+import PatientAutocomplete from '../components/PatientAutocomplete.vue';
+import PatientListLoader from '../components/PatientListLoader.vue';
 import {
   fetchPatients,
   createPatient,
   updatePatient,
   deletePatient,
 } from '../services/patientService';
-import type { ApiPatient } from '../services/patientService';
-import { ref, onMounted } from 'vue';
-
-// Définition du type Patient local (adapté au front)
-interface Patient {
-  id: number;
-  sexe: string;
-  nom: string;
-  prenom: string;
-  dateNaissance: string;
-  telephone: string;
-  email: string;
-}
+import type { Patient } from '../types/Patient';
+import { computed, ref, onMounted } from 'vue';
+import { useAlertStore } from '../stores/alert';
 
 // Données des patients (récupérées via l'API)
 const patients = ref<Patient[]>([]);
 
+// État de chargement
+const loading = ref(true);
+
 // Appel à l'API pour récupérer la liste des patients
 onMounted(async () => {
   try {
-    const apiPatients = (await fetchPatients()) as unknown as ApiPatient[];
-    patients.value = apiPatients.map((p: ApiPatient): Patient => {
-      if (typeof p.id !== 'number') throw new Error('Patient sans id reçu de l’API');
-      return {
-        id: p.id,
-        sexe: p.gender,
-        nom: p.lastName,
-        prenom: p.firstName,
-        dateNaissance: p.birthDate ? p.birthDate.split('T')[0] : '',
-        telephone: p.phone ?? '',
-        email: p.email ?? '',
-      };
-    });
+    patients.value = await fetchPatients();
   } catch (e) {
     if (e instanceof Error) {
       errors.value.global = e.message;
     } else {
       errors.value.global = 'Erreur inconnue';
     }
+  } finally {
+    loading.value = false;
   }
 });
 
@@ -269,46 +290,39 @@ function closeModal() {
 
 const errors = ref<Record<string, string>>({});
 
+const alertStore = useAlertStore();
+
 async function handleSubmit(form: Patient) {
   errors.value = {};
   try {
     if (modalMode.value === 'create') {
       await createPatient({
-        firstName: form.prenom,
-        lastName: form.nom,
-        gender: form.sexe,
-        birthDate: form.dateNaissance,
-        phone: form.telephone,
+        id: 0, // ou undefined si optionnel
+        nom: form.nom,
+        prenom: form.prenom,
+        sexe: form.sexe,
+        dateNaissance: form.dateNaissance,
+        telephone: form.telephone,
         email: form.email,
       });
+      alertStore.show('success', 'Patient créé avec succès');
     } else if (modalMode.value === 'edit' && selectedPatient.value) {
       await updatePatient(selectedPatient.value.id, {
-        firstName: form.prenom,
-        lastName: form.nom,
-        gender: form.sexe,
-        birthDate: form.dateNaissance,
-        phone: form.telephone,
+        nom: form.nom,
+        prenom: form.prenom,
+        sexe: form.sexe,
+        dateNaissance: form.dateNaissance,
+        telephone: form.telephone,
         email: form.email,
       });
+      alertStore.show('success', 'Patient modifié avec succès');
     }
     // Recharge la liste après ajout/modif
-    const apiPatients = (await fetchPatients()) as unknown as ApiPatient[];
-    patients.value = apiPatients.map((p: ApiPatient): Patient => {
-      if (typeof p.id !== 'number') throw new Error('Patient sans id reçu de l’API');
-      return {
-        id: p.id,
-        sexe: p.gender,
-        nom: p.lastName,
-        prenom: p.firstName,
-        dateNaissance: p.birthDate ? p.birthDate.split('T')[0] : '',
-        telephone: p.phone ?? '',
-        email: p.email ?? '',
-      };
-    });
+    patients.value = await fetchPatients();
     closeModal();
   } catch (e) {
     if (typeof e === 'object' && e && 'violations' in e) {
-      // Mapping backend -> front
+      // Mapping backend (API anglais) -> front (français)
       errors.value = Object.fromEntries(
         Object.entries((e as { violations: Record<string, string[]> }).violations).map(([k, v]) => [
           k === 'firstName'
@@ -325,12 +339,16 @@ async function handleSubmit(form: Patient) {
           Array.isArray(v) ? v.join(', ') : String(v),
         ])
       ) as Record<string, string>;
+      alertStore.show('error', 'Erreur lors de la validation du formulaire');
     } else if (typeof e === 'object' && e && 'error' in e) {
       errors.value = { global: (e as { error: string }).error };
+      alertStore.show('error', errors.value.global);
     } else if (e instanceof Error) {
       errors.value = { global: e.message };
+      alertStore.show('error', e.message);
     } else {
       errors.value = { global: 'Erreur inconnue' };
+      alertStore.show('error', 'Erreur inconnue');
     }
   }
 }
@@ -351,25 +369,46 @@ async function confirmDelete() {
   try {
     await deletePatient(patientToDelete.value.id);
     // Recharge la liste après suppression
-    const apiPatients = (await fetchPatients()) as unknown as ApiPatient[];
-    patients.value = apiPatients.map((p: ApiPatient): Patient => {
-      if (typeof p.id !== 'number') throw new Error('Patient sans id reçu de l’API');
-      return {
-        id: p.id,
-        sexe: p.gender,
-        nom: p.lastName,
-        prenom: p.firstName,
-        dateNaissance: p.birthDate ? p.birthDate.split('T')[0] : '',
-        telephone: p.phone ?? '',
-        email: p.email ?? '',
-      };
-    });
+    patients.value = await fetchPatients();
     closeDeleteModal();
+    alertStore.show('success', 'Patient supprimé avec succès');
   } catch (e) {
     errors.value.global =
       e instanceof Error ? e.message : 'Erreur lors de la suppression du patient.';
+    alertStore.show('error', errors.value.global);
   }
 }
+
+const searchPatient = ref(null as Patient | null);
+
+const filteredPatients = computed(() => {
+  if (!searchPatient.value) return patients.value;
+  return patients.value.filter((p) => {
+    const s = searchPatient.value;
+    if (!s) return true;
+    return (
+      p.id === s.id ||
+      (p.nom && s.nom && p.nom.toLowerCase().includes(s.nom.toLowerCase())) ||
+      (p.prenom && s.prenom && p.prenom.toLowerCase().includes(s.prenom.toLowerCase()))
+    );
+  });
+});
+
+// Expose explicitement les méthodes et propriétés critiques pour les tests unitaires
+defineExpose({
+  openCreate,
+  openEdit,
+  openView,
+  closeModal,
+  openDelete,
+  closeDeleteModal,
+  confirmDelete,
+  handleSubmit,
+  errors,
+  showModal,
+  showDeleteModal,
+  patientToDelete,
+});
 </script>
 
 <style scoped>

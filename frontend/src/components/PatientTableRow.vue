@@ -8,11 +8,11 @@
 
   Props :
     - id (number|string) : identifiant unique du patient
-    - gender (string) : genre ('M', 'F', ou autre)
-    - lastName (string) : nom du patient
-    - firstName (string) : prénom du patient
-    - birthDate (string) : date de naissance (formatée)
-    - phone (string) : numéro de téléphone
+    - sexe (string) : genre ('M', 'F', ou autre)
+    - nom (string) : nom du patient
+    - prenom (string) : prénom du patient
+    - dateNaissance (string) : date de naissance (formatée)
+    - telephone (string) : numéro de téléphone
     - email (string) : adresse email
 
   Slots :
@@ -34,28 +34,30 @@
     <td class="px-2 py-2 sm:px-4 sm:py-2 text-sm sm:text-base">{{ id }}</td>
     <td class="px-2 py-2 sm:px-4 sm:py-2 text-sm sm:text-base">
       <BaseIcon
-        :name="gender === 'F' ? 'female' : gender === 'M' ? 'male' : 'transgender'"
+        :name="sexe === 'F' ? 'female' : sexe === 'M' ? 'male' : 'transgender'"
         color="#1976D2"
         size="1.5em"
         class="align-middle"
-        :aria-label="gender === 'F' ? 'Femme' : gender === 'M' ? 'Homme' : 'Autre'"
+        :aria-label="sexe === 'F' ? 'Femme' : sexe === 'M' ? 'Homme' : 'Autre'"
       />
       <span class="sr-only">
-        {{ gender === 'F' ? 'Femme' : gender === 'M' ? 'Homme' : 'Autre' }}
+        {{ sexe === 'F' ? 'Femme' : sexe === 'M' ? 'Homme' : 'Autre' }}
       </span>
     </td>
     <td class="px-2 py-2 sm:px-4 sm:py-2 text-sm sm:text-base max-w-[100px] break-words">
-      {{ lastName }}
+      {{ formatNom(nom) }}
     </td>
     <td class="px-2 py-2 sm:px-4 sm:py-2 text-sm sm:text-base max-w-[100px] break-words">
-      {{ firstName }}
+      {{ formatPrenom(prenom) }}
     </td>
     <td
       class="px-2 py-2 sm:px-4 sm:py-2 min-[810px]:table-cell min-[640px]:hidden hidden text-sm sm:text-base"
     >
       {{ birthDateFormatted }}
     </td>
-    <td class="px-2 py-2 sm:px-4 sm:py-2 xl:table-cell hidden text-sm sm:text-base">{{ phone }}</td>
+    <td class="px-2 py-2 sm:px-4 sm:py-2 xl:table-cell hidden text-sm sm:text-base">
+      {{ telephone }}
+    </td>
     <td class="px-2 py-2 sm:px-4 sm:py-2 2xl:table-cell hidden text-sm sm:text-base">
       {{ email }}
     </td>
@@ -65,23 +67,25 @@
         <!-- Actions par défaut (peuvent être remplacées par le parent) -->
         <router-link
           :to="`/patients/${id}`"
-          class="rounded-[6px] bg-blue-800 text-white px-4 py-2 text-base font-semibold hover:bg-blue-900 focus:outline focus:outline-2 focus:outline-blue-800 text-center"
+          class="rounded-[6px] border border-blue-800 text-blue-800 bg-white px-4 py-2 text-base font-semibold hover:bg-blue-800 hover:text-white transition-all duration-200 focus:outline focus:outline-2 focus:outline-blue-800 text-center flex items-center gap-2"
           aria-label="Voir le patient"
-          >Voir</router-link
         >
+          <BaseIcon name="visibility" size="1.1em" aria-hidden="true" /> Voir
+        </router-link>
         <router-link
           to="#"
-          class="rounded-[6px] bg-green-800 text-white px-4 py-2 text-base font-semibold hover:bg-green-900 focus:outline focus:outline-2 focus:outline-green-800 text-center"
+          class="rounded-[6px] bg-green-800 text-white px-4 py-2 text-base font-semibold hover:bg-green-900 focus:outline focus:outline-2 focus:outline-green-800 text-center flex items-center gap-2"
           aria-label="Modifier le patient"
           tabindex="-1"
-          >Modifier</router-link
         >
+          <BaseIcon name="edit" size="1.1em" aria-hidden="true" /> Modifier
+        </router-link>
         <button
           disabled
-          class="rounded-[6px] bg-red-800 text-white px-4 py-2 text-base font-semibold text-center"
+          class="rounded-[6px] bg-red-800 text-white px-4 py-2 text-base font-semibold text-center flex items-center gap-2"
           aria-label="Supprimer le patient"
         >
-          Supprimer
+          <BaseIcon name="delete" size="1.1em" aria-hidden="true" /> Supprimer
         </button>
       </slot>
     </td>
@@ -91,24 +95,25 @@
 <script setup lang="ts">
 import BaseIcon from './BaseIcon.vue';
 import { computed } from 'vue';
+import { formatNom, formatPrenom } from '../utils/formatNomPrenom';
 
 /**
  * Props du composant PatientTableRow
  * @prop {number|string} id - Identifiant unique du patient
- * @prop {string} gender - Genre ('M', 'F', ou autre)
- * @prop {string} lastName - Nom du patient
- * @prop {string} firstName - Prénom du patient
- * @prop {string} birthDate - Date de naissance (formatée)
- * @prop {string} phone - Numéro de téléphone
+ * @prop {string} sexe - Genre ('M', 'F', ou autre)
+ * @prop {string} nom - Nom du patient
+ * @prop {string} prenom - Prénom du patient
+ * @prop {string} dateNaissance - Date de naissance (formatée)
+ * @prop {string} telephone - Numéro de téléphone
  * @prop {string} email - Adresse email
  */
 const props = defineProps<{
   id: number | string;
-  gender: string;
-  lastName: string;
-  firstName: string;
-  birthDate: string;
-  phone: string;
+  sexe: string;
+  nom: string;
+  prenom: string;
+  dateNaissance: string;
+  telephone: string;
   email: string;
 }>();
 
@@ -116,8 +121,8 @@ const props = defineProps<{
  * Date de naissance formatée selon la langue du navigateur
  */
 const birthDateFormatted = computed(() => {
-  if (!props.birthDate) return '';
-  const date = new Date(props.birthDate);
+  if (!props.dateNaissance) return '';
+  const date = new Date(props.dateNaissance);
   // Format jj/mm/aaaa si navigateur français, sinon format local
   if (navigator.language.startsWith('fr')) {
     return date.toLocaleDateString('fr-FR');
