@@ -24,11 +24,24 @@ class AppointmentFixtures extends Fixture implements DependentFixtureInterface
         foreach ($patients as $i => $patient) {
             for ($j = 0; $j < 3; $j++) {
                 $appointment = new Appointment();
+                // Répartir les rendez-vous autour de la date courante :
+                // - le premier dans le passé, les deux autres dans le futur
+                if ($j === 0) {
+                    $date = $now->modify('-' . ($i + 1) . ' days')->setTime(9, 0);
+                } else {
+                    $date = $now->modify('+' . ($i * 3 + $j + 1) . ' days')->setTime(9 + $j * 2, 0);
+                }
                 $appointment->setPatient($patient);
-                $appointment->setDateTime($now->modify('+' . ($i * 3 + $j + 1) . ' days')->setTime(9 + $j * 2, 0));
+                $appointment->setDateTime($date);
                 $appointment->setDuration(30 + 15 * $j);
                 $appointment->setReason($motifs[array_rand($motifs)]);
-                $appointment->setStatus($statuses[array_rand($statuses)]);
+                // Statut : 'completed' seulement si la date est passée, sinon 'scheduled' ou 'cancelled'
+                if ($date < $now) {
+                    $status = 'completed';
+                } else {
+                    $status = (rand(0, 1) ? 'scheduled' : 'cancelled');
+                }
+                $appointment->setStatus($status);
                 $manager->persist($appointment);
             }
         }

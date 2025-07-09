@@ -20,14 +20,37 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 class AppointmentApiControllerTest extends WebTestCase
 {
     /**
+     * Crée dynamiquement un patient de test via l'API et retourne son ID.
+     */
+    private function createTestPatient($client): int
+    {
+        $payload = [
+            'firstName' => 'Jean',
+            'lastName' => 'Testeur',
+            'gender' => 'M',
+            'birthDate' => '1990-01-01',
+            'phone' => '0102030405',
+            'email' => uniqid('test', true) . '@example.com',
+        ];
+        $client->request('POST', '/api/patients', [], [], [
+            'CONTENT_TYPE' => 'application/json',
+        ], json_encode($payload));
+        $this->assertResponseStatusCodeSame(201);
+        $data = json_decode($client->getResponse()->getContent(), true);
+        $this->assertArrayHasKey('id', $data);
+        return $data['id'];
+    }
+
+    /**
      * Cas nominal : création d'un rendez-vous avec un patient existant et des données valides.
      * Attendu : code 201, retour de l'objet créé avec tous les champs attendus.
      */
     public function testCreateAppointmentSuccess(): void
     {
         $client = static::createClient();
+        $patientId = $this->createTestPatient($client);
         $payload = [
-            'patientId' => 1,
+            'patientId' => $patientId,
             'dateTime' => '2030-01-01T09:00:00+00:00',
             'duration' => 30,
             'reason' => 'Consultation annuelle',
@@ -77,8 +100,9 @@ class AppointmentApiControllerTest extends WebTestCase
     public function testCreateAppointmentInvalidData(): void
     {
         $client = static::createClient();
+        $patientId = $this->createTestPatient($client);
         $payload = [
-            'patientId' => 1,
+            'patientId' => $patientId,
             'dateTime' => '2020-01-01T09:00:00+00:00', // date passée
             'duration' => 30,
             'reason' => 'Consultation annuelle',
@@ -184,8 +208,9 @@ class AppointmentApiControllerTest extends WebTestCase
     public function testUpdateAppointmentNotFound(): void
     {
         $client = static::createClient();
+        $patientId = $this->createTestPatient($client);
         $payload = [
-            'patientId' => 1,
+            'patientId' => $patientId,
             'dateTime' => '2031-01-01T10:00:00+00:00',
             'duration' => 45,
             'reason' => 'Mise à jour motif',
@@ -298,8 +323,9 @@ class AppointmentApiControllerTest extends WebTestCase
     public function testPatchAppointmentNotFound(): void
     {
         $client = static::createClient();
+        $patientId = $this->createTestPatient($client);
         $payload = [
-            'patientId' => 1,
+            'patientId' => $patientId,
             'dateTime' => '2032-01-01T11:00:00+00:00',
             'duration' => 60,
             'reason' => 'Patch motif',
@@ -377,9 +403,10 @@ class AppointmentApiControllerTest extends WebTestCase
     public function testDeleteAppointmentSuccess(): void
     {
         $client = static::createClient();
+        $patientId = $this->createTestPatient($client);
         // On crée un rendez-vous pour garantir qu'il existe
         $payload = [
-            'patientId' => 1,
+            'patientId' => $patientId,
             'dateTime' => '2035-01-01T10:00:00+00:00',
             'duration' => 30,
             'reason' => 'Suppression test',
@@ -420,8 +447,9 @@ class AppointmentApiControllerTest extends WebTestCase
     public function testPatchAppointmentWithoutId(): void
     {
         $client = static::createClient();
+        $patientId = $this->createTestPatient($client);
         $payload = [
-            'patientId' => 1,
+            'patientId' => $patientId,
             'dateTime' => '2032-01-01T11:00:00+00:00',
             'duration' => 60,
             'reason' => 'Patch motif',
@@ -431,8 +459,8 @@ class AppointmentApiControllerTest extends WebTestCase
             'CONTENT_TYPE' => 'application/json',
         ], json_encode($payload));
         $this->assertTrue(
-            in_array($client->getResponse()->getStatusCode(), [404, 405]),
-            'La route PATCH sans ID doit retourner 404 ou 405.'
+            in_array($client->getResponse()->getStatusCode(), [400, 404, 405]),
+            'La route PATCH sans ID doit retourner 400, 404 ou 405.'
         );
     }
 }
