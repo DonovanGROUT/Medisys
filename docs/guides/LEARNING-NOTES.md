@@ -269,3 +269,33 @@ Notes des difficultés et solutions trouvées
 > Notes mises à jour au fil de l’apprentissage et des évolutions du projet.
 
 ---
+
+## Apports et apprentissages de la phase Rendez-vous (Appointment) VueJS
+
+- **Architecture frontend avancée** :
+  - Création de tous les composants rendez-vous (liste, formulaire, item, actions, loaders, autocomplete, etc.) avec typage strict TypeScript.
+  - Centralisation des helpers de mapping et de validation dans `utils/` et les services, pour garantir la cohérence et éviter la duplication.
+  - Utilisation de Pinia pour la gestion d’état global (alertes, utilisateur), avec tests dédiés.
+  - Refactoring des modales pour l’accessibilité (focus trap, navigation clavier, fermeture Échap/clic extérieur, ARIA, feedback visuel).
+  - Création de composants réutilisables (modals, loaders, autocomplete, icons, etc.) pour accélérer le développement et garantir la cohérence UX/UI.
+  - Application stricte des conventions de nommage et de structure (PascalCase, camelCase, mapping API ↔ Front).
+
+- **Tests frontend et robustesse** :
+  - Refactoring strict des fichiers de tests critiques (blocs métier, helpers centralisés, typage strict).
+  - Couverture de tests élevée sur les composants critiques, avec focus sur la validation, l’accessibilité, la robustesse et les cas limites.
+  - Centralisation des helpers et mocks de test pour éviter la duplication et garantir la cohérence des scénarios.
+  - Ajout de tests d’accessibilité systématiques (jest-axe, ARIA, navigation clavier).
+  - Utilisation de scripts npm pour le formatage, la couverture, le reset de la base de test.
+
+- **Accessibilité et bonnes pratiques** :
+  - Accessibilité systématique sur tous les nouveaux composants (labels, ARIA, navigation clavier, feedback visuel, audit jest-axe).
+  - Feedback utilisateur immédiat sur la validation frontend (messages d’erreur, désactivation des boutons, focus sur le champ en erreur).
+  - Ne jamais utiliser directement les noms de champs API dans le front : toujours passer par le mapping centralisé.
+  - Toujours valider les champs côté frontend avant envoi à l’API.
+  - Documentation et harmonisation des blocs de commentaires dans tous les fichiers critiques frontend.
+
+- **Documentation et organisation** :
+  - Mise à jour et harmonisation de tous les guides, index, glossaire, mapping, charte graphique, sécurité, etc. pour refléter la réalité du code.
+  - Ajout d’exemples concrets de mapping, de validation frontend, de feedback utilisateur, d’accessibilité dans les docs techniques.
+
+> Ces apprentissages ont permis d’améliorer la qualité, la robustesse, l’accessibilité et la maintenabilité du frontend, tout en posant les bases pour l’intégration de l’authentification et la gestion des droits dans la prochaine phase.

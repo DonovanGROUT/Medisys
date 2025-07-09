@@ -1,5 +1,7 @@
 # Glossaire
 
+*Dernière mise à jour : 09/07/2025*
+
 ## 📚 À propos
 
 Glossaire des termes et concepts découverts pendant l'apprentissage du développement d'applications web modernes avec PHP, Symfony et Vue.js.
@@ -225,5 +227,43 @@ Glossaire des termes et concepts découverts pendant l'apprentissage du dévelop
 **Centralisation des erreurs** : Pattern où toutes les erreurs de validation ou métier sont collectées et renvoyées dans une structure unique (ex : retour 400 avec liste des violations), pour faciliter le traitement côté frontend.
 
 **Reset base de test** : Procédure ou script permettant de réinitialiser complètement la base de test (drop, create, migrate, fixtures) avant d’exécuter les tests automatisés.
+
+## 🎯 Concepts frontend, tests, UX/UI, accessibilité (ajouts)
+
+**Focus trap** : Technique ou composant permettant de garder le focus clavier à l’intérieur d’une modale ou d’un dialogue, pour l’accessibilité.
+
+**ARIA** : Attributs HTML (aria-label, aria-describedby, etc.) utilisés pour améliorer l’accessibilité des interfaces pour les lecteurs d’écran.
+
+**jest-axe** : Librairie de test d’accessibilité automatisée, utilisée avec Vitest/Jest pour vérifier la conformité ARIA et l’absence d’erreurs d’accessibilité.
+
+**axe** : Moteur d’audit d’accessibilité utilisé par jest-axe.
+
+**Snapshot** : Capture de l’état du rendu d’un composant à un instant donné, utilisée pour détecter les régressions visuelles ou structurelles.
+
+**Helper de test** : Fonction utilitaire centralisée pour la création de données de test, la simulation d’actions ou la configuration de mocks dans les tests.
+
+**Mock avancé** : Simulation poussée d’API, de stores, de hooks ou de modules, permettant de tester des cas limites ou des erreurs inattendues.
+
+**Coverage** : Rapport de couverture de code par les tests (statistiques sur les lignes, branches, fonctions testées).
+
+**Composables / hooks** : Fonctions réutilisables (ex : useAlert, useForm) permettant de factoriser la logique métier ou d’état dans les composants Vue 3.
+
+**Store Pinia** : Gestionnaire d’état global pour Vue.js, testé avec @pinia/testing, permet de centraliser et de mocker l’état dans les tests.
+
+**jsdom** : Environnement DOM simulé pour tester les composants frontend sans navigateur réel.
+
+**Validation frontend** : Ensemble des règles et helpers pour vérifier les champs, les statuts, les dates, etc. côté front avant envoi à l’API.
+
+**Accessibilité (a11y)** : Ensemble des techniques et outils pour rendre l’interface utilisable par tous (navigation clavier, ARIA, focus, contrastes, etc.).
+
+**Audit d’accessibilité** : Vérification systématique (manuelle ou automatisée) de la conformité d’une interface aux standards d’accessibilité.
+
+**Lazy loading** : Chargement différé des composants ou des données pour améliorer les performances et l’expérience utilisateur.
+
+**Pagination** : Découpage des listes volumineuses en pages pour optimiser l’affichage et la navigation.
+
+**Alert store** : Store Pinia dédié à la gestion centralisée des messages d’alerte (succès, erreur, info) dans l’UI.
+
+**Mapping API ↔ Front** : Voir fichier dédié, mais notion centrale pour la robustesse des échanges et la clarté du code.
 
 > Glossaire enrichi au fur et à mesure des découvertes
