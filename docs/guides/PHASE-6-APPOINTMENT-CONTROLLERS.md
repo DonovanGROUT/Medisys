@@ -121,6 +121,8 @@ Mettre en place l’API REST complète pour la ressource Appointment : contrô
 
 ## 🔮 Prochaine phase
 
+Passage à la **Phase 7 : Interface Rendez-vous**.
+
 ---
 
 > Cette phase a permis de valider la robustesse de l’API Appointment, la centralisation du mapping, la gestion stricte des validations et des erreurs, ainsi que la couverture par des tests d’intégration automatisés.

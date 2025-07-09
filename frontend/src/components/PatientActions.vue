@@ -25,7 +25,9 @@
 -->
 <template>
   <!-- Groupe de boutons d’action patient -->
-  <div class="flex flex-col gap-3 mt-4 text-center sm:mt-0 sm:flex-row sm:gap-2 sm:justify-center">
+  <div
+    class="flex flex-col gap-3 mt-4 text-center sm:mt-0 min-[710px]:flex-row min-[710px]:gap-2 min-[710px]:justify-center"
+  >
     <button
       @click="$emit('view')"
       class="rounded-[6px] bg-blue-800 text-white px-4 py-2 text-base font-semibold hover:bg-blue-900 focus:outline focus:outline-2 focus:outline-blue-800 text-center"

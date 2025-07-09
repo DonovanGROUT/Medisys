@@ -37,6 +37,9 @@ Organisation des tests unitaires frontend avec Vitest, Vue Test Utils et jsdom�
 ### [06 - Prettier & formatage automatique](./06-prettier-formatage.md)
 Mise en place de Prettier pour le formatage automatique du code frontend : configuration, intégration VS Code, workflow d’équipe, résolution des problèmes courants.
 
+### [09 - Explications techniques et wording sur les tests](./09-tests-explications.md)
+Synthèse sur la stratégie, la structuration, le wording et les bonnes pratiques de tests dans le projet (frontend Vitest, backend PHPUnit, helpers, accessibilité, etc.).
+
 ## 🏥 Concepts Métier - Santé Digitale
 
 ### [Concepts spécialisés](../business/MEDICAL-BUSINESS-CONCEPTS.md)

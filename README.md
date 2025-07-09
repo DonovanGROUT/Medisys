@@ -18,7 +18,8 @@
     - [✅ Phase 4 - Interface Homepage et Patients VueJS (Terminée)](#-phase-4---interface-homepage-et-patients-vuejs-terminée)
     - [✅ Phase 5 - Entité Rendez-vous (Appointment)](#-phase-5---entité-rendez-vous-appointment)
     - [✅ Phase 6 - Contrôleurs et API Appointment](#-phase-6---contrôleurs-et-api-appointment)
-    - [🚧 Prochaine phase (front Appointment VueJS)](#-prochaine-phase-front-appointment-vuejs)
+    - [✅ Phase 7 - Appointment VueJS (Terminée)](#-phase-7---appointment-vuejs-terminée)
+    - [🚧 Prochaine phase (Authentification)](#-prochaine-phase-authentification)
   - [🧪 Tests et Qualité](#-tests-et-qualité)
   - [🛠️ Scripts utiles (frontend)](#️-scripts-utiles-frontend)
   - [📏 Conventions \& bonnes pratiques](#-conventions--bonnes-pratiques)
@@ -114,21 +115,33 @@ Le projet a d'abord consisté à construire un début d'application monolithique
 - Documentation OpenAPI et mapping API/Front à jour
 - Tests d’intégration automatisés pour chaque endpoint
 
-### 🚧 Prochaine phase (front Appointment VueJS)
-- Développement de l’interface Appointment (VueJS) : écrans, appels API, gestion des états, validation côté client
+### ✅ Phase 7 - Appointment VueJS (Terminée)
+- Développement complet de l’interface rendez-vous (Appointment) côté VueJS (création, édition, suppression, affichage)
+- Connexion de l’interface VueJS aux endpoints API rendez-vous existants (création, édition, suppression, affichage)
+- Validation côté client (formulaires, champs obligatoires, gestion des erreurs)
+- Accessibilité et responsive design sur tous les écrans rendez-vous
+- Refactoring et harmonisation des commentaires/blocs JSDoc sur les services et composants critiques
+- Ajout et fiabilisation des tests unitaires et d’intégration (Vitest)
+- Documentation et guides mis à jour dans le dossier `docs/`
+
+### 🚧 Prochaine phase (Authentification)
+- Mise en place de l’authentification utilisateur (frontend et backend)
+- Création de l’interface de connexion/déconnexion côté VueJS
+- Gestion du token, sécurisation des routes et appels API
+- Ajout de tests unitaires et d’intégration pour l’authentification
+- Documentation et guides à mettre à jour dans le dossier `docs/`
 
 ## 🧪 Tests et Qualité
 
-- **Total tests backend** : 69, **assertions** : 206 (affichées par PHPUnit)
-- **Total tests frontend** : 57 (Vitest, assertions via expect())
+- **Total tests backend** : 69, **assertions** : 206 (PHPUnit)
+- **Total tests frontend** : 302 (Vitest, assertions via expect())
 
 **Détail des tests :**
 - **Tests unitaires backend** : 2 fichiers (AppointmentTest.php, PatientTest.php), 20 tests, 40 assertions ✅
 - **Tests d'intégration backend (API/contrôleurs)** : 2 fichiers principaux (AppointmentApiControllerTest.php, PatientApiControllerTest.php), 39 tests, 110 assertions ✅
 - **Tests fonctionnels backend (contrôleur Symfony)** : 4 fichiers (show, new, edit, delete), 8 tests, 16 assertions ✅
 - **Tests d'intégration backend (repository)** : 2 fichiers, 11 tests, 40 assertions ✅
-- **Tests unitaires frontend** : 14 fichiers (un par composant/module), 49 tests (CRUD, validation, erreurs, accessibilité)
-- **Tests d'intégration frontend** : 1 fichier, 8 tests (CRUD, erreurs API, accessibilité)
+- **Tests unitaires et d'intégration frontend** : 31 fichiers, 302 tests (CRUD, validation, erreurs, accessibilité, intégration API)
 
 **Qualité et sécurité :**
 - **Couverture PHPDoc** : 100% ✅

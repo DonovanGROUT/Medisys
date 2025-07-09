@@ -32,22 +32,18 @@
    ```bash
    git checkout develop
    git pull origin develop
-   git checkout -b feature/patient-controllers-forms
+   git checkout -b feature/nom-fonctionnalite
    ```
 
 2. **Développer la fonctionnalité**
-
-   ```bash
-   # Commits de développement
-   git add .
-   git commit -m "feat: add Patient entity with basic fields"
-   git push origin feature/patient-entity
-   ```
+   - Commits atomiques et explicites (voir conventions ci-dessous)
+   - Vérification systématique des tests (`npm run test`, `npm run coverage` ou équivalent)
+   - Push sur la branche feature
 
 3. **Créer une Pull Request** sur GitHub
-   - Source : `feature/patient-entity`
+   - Source : `feature/xxx`
    - Target : `develop`
-   - Révision du code et validation des tests
+   - Revue de code, validation des tests et de la couverture
 
 4. **Merger la PR** et supprimer la branche
 
@@ -55,7 +51,7 @@
    # Après merge de la PR
    git checkout develop
    git pull origin develop
-   git branch -d feature/patient-entity
+   git branch -d feature/xxx
    ```
 
 ### Pour une release vers production
@@ -112,14 +108,14 @@ docs: update README with installation steps
 - **Collaboration** : Facilite le travail en équipe (en cas d'ajout de nouveaux développeurs)
 - **Historique** : Traçabilité claire des fonctionnalités
 
-## 📋 Prochaines features prévues
+## 📋 Suivi des features (phases)
 
 - `feature/patient-entity` : ✅ **TERMINÉE** - Entité Patient avec Doctrine
 - `feature/patient-controllers-forms` : ✅ **TERMINÉE** - Contrôleurs et formulaires Patient
 - `feature/patient-vuejs-front` : ✅ **TERMINÉE** - Interface Patient et homepage en Vue.js (SPA)
 - `feature/appointment-entity` : ✅ **TERMINÉE** - Entité Rendez-vous (Doctrine, validation, tests, docs)
 - `feature/appointment-controllers` : ✅ **TERMINÉE** - API/contrôleurs Rendez-vous
-- `feature/appointment-vuejs-front` : 📅 **PROCHAINE** - Interface Rendez-vous en Vue.js (SPA)
-- `feature/user-authentication` : 📅 **À VENIR** - Système d'authentification
+- `feature/appointment-vuejs-front` : ✅ **TERMINÉE** - Interface Rendez-vous en Vue.js (SPA)
+- `feature/user-authentication` : 📅 **PROCHAINE** - Système d'authentification
 
-> Les features suivent la progression des phases documentées
+> Les features suivent la progression des phases documentées.

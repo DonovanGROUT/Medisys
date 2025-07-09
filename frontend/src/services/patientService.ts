@@ -6,6 +6,11 @@
  * - Garantit le typage strict des données Patient
  * - Utilisé par les vues et composants Vue.js pour toutes les opérations patient
  *
+ * Mapping API ↔ Front :
+ *   - L’API expose les champs en anglais (lastName, firstName, gender, birthDate, phone, email)
+ *   - Le frontend utilise les champs en français (nom, prenom, sexe, dateNaissance, telephone, email)
+ *   - La conversion est assurée ici dans les fonctions de mapping
+ *
  * Sécurité :
  *   - Ne stocke aucune donnée sensible côté client
  *   - Ne jamais exposer de logique métier critique ici
@@ -15,16 +20,7 @@
  *   - Les réponses 204 (DELETE) retournent true
  */
 import { handleApiResponse, formatError } from '../utils/apiErrorHandler';
-
-export interface Patient {
-  id?: number;
-  nom: string;
-  prenom: string;
-  sexe: string;
-  dateNaissance: string;
-  telephone?: string;
-  email?: string;
-}
+import type { Patient } from '../types/Patient';
 
 export interface ApiPatient {
   id?: number;
@@ -37,6 +33,43 @@ export interface ApiPatient {
 }
 
 /**
+ * Mapping robuste d'un objet API (anglais ou français) vers Patient (français)
+ * @param {unknown} p - Objet patient reçu de l'API
+ * @returns {Patient}
+ */
+function mapApiPatient(p: unknown): Patient {
+  const api = p as Partial<ApiPatient>;
+  const alt = p as Record<string, unknown>;
+  return {
+    id: typeof api.id === 'number' ? api.id : 0,
+    nom:
+      typeof api.lastName === 'string' ? api.lastName : typeof alt.nom === 'string' ? alt.nom : '',
+    prenom:
+      typeof api.firstName === 'string'
+        ? api.firstName
+        : typeof alt.prenom === 'string'
+          ? alt.prenom
+          : '',
+    sexe:
+      typeof api.gender === 'string' ? api.gender : typeof alt.sexe === 'string' ? alt.sexe : '',
+    dateNaissance:
+      (typeof api.birthDate === 'string'
+        ? api.birthDate
+        : typeof alt.dateNaissance === 'string'
+          ? alt.dateNaissance
+          : ''
+      ).split('T')[0] || '',
+    telephone:
+      typeof api.phone === 'string'
+        ? api.phone
+        : typeof alt.telephone === 'string'
+          ? alt.telephone
+          : '',
+    email: typeof api.email === 'string' ? api.email : '',
+  };
+}
+
+/**
  * Récupère la liste des patients depuis l'API.
  * @returns {Promise<Patient[]>} Tableau de patients
  * @throws {ApiError} en cas d'erreur API ou réseau
@@ -44,9 +77,10 @@ export interface ApiPatient {
 export async function fetchPatients(): Promise<Patient[]> {
   try {
     const response = await fetch('/api/patients');
-    const data = await handleApiResponse<Patient[]>(response, 'Erreur API (liste)');
+    const data = await handleApiResponse<unknown[]>(response, 'Erreur API (liste)');
     if (data === true) throw formatError({}, 'Réponse inattendue');
-    return data;
+    // Mapping explicite (robuste)
+    return data.map(mapApiPatient);
   } catch (e) {
     throw formatError(e);
   }
@@ -58,26 +92,27 @@ export async function fetchPatients(): Promise<Patient[]> {
  * @returns {Promise<Patient>} Patient créé (avec id)
  * @throws {ApiError} en cas d'erreur API ou validation
  */
-export async function createPatient(patient: ApiPatient): Promise<Patient> {
+export async function createPatient(patient: Patient): Promise<Patient> {
   try {
+    // Conversion Patient (fr) -> ApiPatient (en)
+    const apiPatient: ApiPatient = {
+      gender: patient.sexe,
+      lastName: patient.nom,
+      firstName: patient.prenom,
+      birthDate: patient.dateNaissance,
+      phone: patient.telephone,
+      email: patient.email,
+    };
     const response = await fetch('/api/patients', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(patient),
+      body: JSON.stringify(apiPatient),
     });
-    const data = await handleApiResponse<ApiPatient>(response, 'Erreur API (création)');
+    const data = await handleApiResponse<unknown>(response, 'Erreur API (création)');
     if (data === true) throw formatError({}, 'Réponse inattendue');
-    // Mapping explicite ApiPatient → Patient
-    if (typeof data.id !== 'number') throw formatError({}, 'Patient sans id');
-    return {
-      id: data.id,
-      nom: data.lastName,
-      prenom: data.firstName,
-      sexe: data.gender,
-      dateNaissance: data.birthDate ? data.birthDate.split('T')[0] : '',
-      telephone: data.phone ?? '',
-      email: data.email ?? '',
-    };
+    if (typeof (data as Record<string, unknown>).id !== 'number')
+      throw formatError({}, 'Patient sans id');
+    return mapApiPatient(data);
   } catch (e) {
     throw formatError(e);
   }
@@ -90,26 +125,26 @@ export async function createPatient(patient: ApiPatient): Promise<Patient> {
  * @returns {Promise<Patient>} Patient modifié
  * @throws {ApiError} en cas d'erreur API ou validation
  */
-export async function updatePatient(id: number, patient: Partial<ApiPatient>): Promise<Patient> {
+export async function updatePatient(id: number, patient: Partial<Patient>): Promise<Patient> {
   try {
+    // Conversion partielle Patient (fr) -> ApiPatient (en)
+    const apiPatient: Partial<ApiPatient> = {};
+    if (patient.sexe !== undefined) apiPatient.gender = patient.sexe;
+    if (patient.nom !== undefined) apiPatient.lastName = patient.nom;
+    if (patient.prenom !== undefined) apiPatient.firstName = patient.prenom;
+    if (patient.dateNaissance !== undefined) apiPatient.birthDate = patient.dateNaissance;
+    if (patient.telephone !== undefined) apiPatient.phone = patient.telephone;
+    if (patient.email !== undefined) apiPatient.email = patient.email;
     const response = await fetch(`/api/patients/${id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(patient),
+      body: JSON.stringify(apiPatient),
     });
-    const data = await handleApiResponse<ApiPatient>(response, 'Erreur API (modification)');
+    const data = await handleApiResponse<unknown>(response, 'Erreur API (modification)');
     if (data === true) throw formatError({}, 'Réponse inattendue');
-    // Mapping explicite ApiPatient → Patient
-    if (typeof data.id !== 'number') throw formatError({}, 'Patient sans id');
-    return {
-      id: data.id,
-      nom: data.lastName,
-      prenom: data.firstName,
-      sexe: data.gender,
-      dateNaissance: data.birthDate ? data.birthDate.split('T')[0] : '',
-      telephone: data.phone ?? '',
-      email: data.email ?? '',
-    };
+    if (typeof (data as Record<string, unknown>).id !== 'number')
+      throw formatError({}, 'Patient sans id');
+    return mapApiPatient(data);
   } catch (e) {
     throw formatError(e);
   }
@@ -131,3 +166,6 @@ export async function deletePatient(id: number): Promise<true> {
     throw formatError(e);
   }
 }
+
+export { mapApiPatient };
+export type { Patient };
