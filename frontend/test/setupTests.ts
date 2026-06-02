@@ -4,18 +4,20 @@
 // Il permet de stubber globalement les composants comme router-link pour éviter les warnings Vue.
 
 import { config } from '@vue/test-utils';
-import { setActivePinia, createPinia } from 'pinia';
+import { createTestingPinia } from '@pinia/testing';
 import { beforeEach } from 'vitest';
 
-config.global.stubs = {
-  ...config.global.stubs,
-  'router-link': {
-    template: '<a><slot /></a>',
-  },
+// Initialiser stubs s'il n'existe pas
+if (!config.global.stubs) {
+  config.global.stubs = {};
+}
+
+config.global.stubs['router-link'] = {
+  template: '<a><slot /></a>',
 };
 
 beforeEach(() => {
-  setActivePinia(createPinia());
+  createTestingPinia();
 });
 
 export {};
