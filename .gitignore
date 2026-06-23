@@ -1,6 +1,7 @@
 # .gitignore racine (Medisys)
 
 # Backend
+/vendor/
 /backend/var/
 /backend/vendor/
 /backend/.phpunit.cache/
