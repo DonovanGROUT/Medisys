@@ -8,3 +8,5 @@ overrides:
   browserslist: ">=4.28.7"
   postcss-selector-parser: ">=7.1.6 <8"
   source-map-js: ">=1.2.2 <2"
+  "minimatch@9": ">=11.0.1"
+  "js-beautify>glob": ">=14.0.2"
